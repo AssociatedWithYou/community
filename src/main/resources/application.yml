@@ -1,1 +1,7 @@
-
+#github账号登陆配置
+github:
+  client:
+    id: 89cceb7e8f19ce08fdea
+    secret: da8194efe08636b7adb017780b6fe7aee042b0ba
+  redirect:
+    uri:
