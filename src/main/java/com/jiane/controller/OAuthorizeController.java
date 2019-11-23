@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.UUID;
 
@@ -36,7 +38,8 @@ public class OAuthorizeController {
     @GetMapping("/callback")
     public String callback(@RequestParam("code") String code,
                            @RequestParam("state") String state,
-                           HttpSession session) {
+                           HttpSession session,
+                           HttpServletResponse response) {
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setClient_id(client_id);//申请的github的Oauthor app的id
         accessTokenDTO.setClient_secret(client_secret);//申请的github的oauthor app的secret
@@ -48,20 +51,22 @@ public class OAuthorizeController {
 //        System.out.println(githubUser.getId()+"___"+githubUser.getName()+"___"+githubUser.getBio());
         if (githubUser == null) {
 //            登陆失败
-            return "redirect:index";
+            return "redirect:/";
         }else{
 //            登陆成功
 
             User user = new User();
             Long sysTime = System.currentTimeMillis();
+            String token = UUID.randomUUID().toString();
             user.setName(githubUser.getName())
-                    .setToken(UUID.randomUUID().toString())
+                    .setToken(token)
                     .setAccountId(githubUser.getId())
                     .setGmtCreate(sysTime)
                     .setGmtModified(sysTime);
             userMapper.insert(user);
-            session.setAttribute("githubUser",githubUser);
-            return "redirect:index";
+            response.addCookie(new Cookie("token",token));
+//            session.setAttribute("githubUser",githubUser);
+            return "redirect:/";
         }
     }
 }
