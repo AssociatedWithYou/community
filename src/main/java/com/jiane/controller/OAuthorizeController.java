@@ -2,6 +2,8 @@ package com.jiane.controller;
 
 import com.jiane.dto.AccessTokenDTO;
 import com.jiane.dto.GithubUser;
+import com.jiane.mapper.UserMapper;
+import com.jiane.model.User;
 import com.jiane.provice.GithubProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
+import java.util.UUID;
 
 @Controller
 public class OAuthorizeController {
@@ -26,6 +29,9 @@ public class OAuthorizeController {
     @Value("${github.redirect.uri}")
     String redirect_uri;
 
+
+    @Autowired
+    UserMapper userMapper;
 
     @GetMapping("/callback")
     public String callback(@RequestParam("code") String code,
@@ -45,6 +51,15 @@ public class OAuthorizeController {
             return "redirect:index";
         }else{
 //            登陆成功
+
+            User user = new User();
+            Long sysTime = System.currentTimeMillis();
+            user.setName(githubUser.getName())
+                    .setToken(UUID.randomUUID().toString())
+                    .setAccountId(githubUser.getId())
+                    .setGmtCreate(sysTime)
+                    .setGmtModified(sysTime);
+            userMapper.insert(user);
             session.setAttribute("githubUser",githubUser);
             return "redirect:index";
         }
