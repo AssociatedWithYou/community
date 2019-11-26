@@ -1,0 +1,35 @@
+body{
+    background-color: #efefef;
+}
+
+
+.main {
+    background-color: white;
+    margin: 3% 10%;
+}
+
+.btn-publish {
+    float: right;
+}
+
+#div_right{
+    float: right;
+}
+
+.text-desc{
+    font-size: 12px;
+    font-weight: normal;
+    color: #999;
+}
+
+
+.question-img{
+    width : 39px;
+    height : 39px;
+}
+
+#div_question{
+    margin-top: 50px;
+}
+
+

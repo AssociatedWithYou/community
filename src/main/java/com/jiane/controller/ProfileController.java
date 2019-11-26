@@ -1,5 +1,6 @@
 package com.jiane.controller;
 
+
 import com.jiane.dto.QuestionDTO;
 import com.jiane.mapper.QuestionMapper;
 import com.jiane.mapper.UserMapper;
@@ -7,18 +8,20 @@ import com.jiane.model.User;
 import com.jiane.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Controller
-public class IndexController {
+public class ProfileController {
+
     @Autowired
     UserMapper userMapper;
 
@@ -28,8 +31,10 @@ public class IndexController {
     @Autowired
     QuestionService questionService;
 
-    @GetMapping("/")
-    public String gotoIndex(HttpServletRequest request){
+    @GetMapping("/profile/{action}")
+    public String getProfile( @PathVariable(name="action") String action , Model model,
+                                      HttpServletRequest request){
+        System.out.println("aaa");
         Cookie[] cookies = request.getCookies();
         if (cookies==null||cookies.length==0){
             return "index";
@@ -45,17 +50,41 @@ public class IndexController {
                 break;
             }
         }
-        return "index";
+
+        if ("questions".equals(action)) {
+            model.addAttribute("titleBar", "我的问题");
+        }
+        return "profile";
     }
 
-
-
-    @GetMapping("/getQuestions")
+    @GetMapping("/profile/user/getQuestions")
     @ResponseBody
-    public Map<String,Object> findQuestionByPage(Integer currentPage,Integer record){//当前页和每页条数
+    public Map<String,Object> getQuestionsByUser(HttpServletRequest request,Integer currentPage, Integer record, HttpSession session){
 
-        Integer totalCounts = questionMapper.findCounts();//总数据条数
+        Cookie[] cookies = request.getCookies();
+        if (cookies==null||cookies.length==0){
+            return null;
+        }
+        for (Cookie cookie : cookies) {
+            if ("token".equals(cookie.getName())) {
+                String token = cookie.getValue();
+                User user = userMapper.findByToken(token);
+                System.out.println(user);
+                if (user != null) {
+                    request.getSession().setAttribute("user", user);
+                }
+                break;
+            }
+        }
+
+        User user = (User)session.getAttribute("user");
+
+        Integer totalCounts = questionMapper.findCountsByUser(user);//总数据条数
+
         Integer totalPages = totalCounts % record == 0 ? totalCounts / record : totalCounts / record + 1;//总页数
+        if (totalPages == 0) {
+            totalPages = 1;
+        }
         Integer myCurrentPage = 1;
         if (currentPage>0&&currentPage<=totalPages){
             myCurrentPage = currentPage;
@@ -67,7 +96,7 @@ public class IndexController {
 
         Integer start = (myCurrentPage - 1) * record;
         Integer end = record;
-        List<QuestionDTO> questions = questionService.getQuestions(start,end);
+        List<QuestionDTO> questions = questionService.getQuestions(start,end,user);
 
         Map<String, Object> map = new HashMap<>();
 
@@ -105,3 +134,4 @@ public class IndexController {
         return map;
     }
 }
+

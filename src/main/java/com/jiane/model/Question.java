@@ -9,13 +9,17 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-public class User {
-
+public class Question {
     private Integer id;
-    private String name;
-    private String accountId;
-    private String token;
+    private String title;
+    private String description;
+
+    private Integer creator;
     private Long gmtCreate;
     private Long gmtModified;
-    private String avatarUrl;
+    private Integer commentCount;
+    private Integer viewCount;
+    private Integer likeCount;
+    private String tags;
+
 }

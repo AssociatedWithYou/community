@@ -12,3 +12,10 @@ spring:
     username: root
     password: h2
     driver-class-name: org.h2.Driver
+
+  thymeleaf:
+    cache: false
+logging:
+  level:
+    com.jiane.mapper.QuestionMapper: debug
+

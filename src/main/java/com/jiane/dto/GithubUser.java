@@ -13,5 +13,6 @@ public class GithubUser {
     private String name;
     private String id;
     private String bio;//github返回的用户数据中的用户的描述信息
+    private String avatar_url;
 
 }

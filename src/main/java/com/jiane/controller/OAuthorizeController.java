@@ -48,6 +48,9 @@ public class OAuthorizeController {
         accessTokenDTO.setState(state);
         String accessTokenByGithub = githubProvider.getAccessTokenByGithub(accessTokenDTO);
         GithubUser githubUser = githubProvider.getGithubUser(accessTokenByGithub);
+
+        System.out.println(githubUser);
+
 //        System.out.println(githubUser.getId()+"___"+githubUser.getName()+"___"+githubUser.getBio());
         if (githubUser == null) {
 //            登陆失败
@@ -62,9 +65,14 @@ public class OAuthorizeController {
                     .setToken(token)
                     .setAccountId(githubUser.getId())
                     .setGmtCreate(sysTime)
-                    .setGmtModified(sysTime);
+                    .setGmtModified(sysTime)
+                    .setAvatarUrl(githubUser.getAvatar_url());
+
+
             userMapper.insert(user);
-            response.addCookie(new Cookie("token",token));
+            Cookie cookie = new Cookie("token", token);
+            cookie.setMaxAge(60*60*24);
+            response.addCookie(cookie);
 //            session.setAttribute("githubUser",githubUser);
             return "redirect:/";
         }

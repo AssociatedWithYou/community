@@ -2,14 +2,14 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>简e社区</title>
+    <title>问题中心</title>
 
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="/css/community.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/community.css">
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
 
 
     <script>
@@ -33,7 +33,7 @@
                 $.ajax({
                     type: "GET",
                     dataType: "json",
-                    url: "/getQuestions?record=" + re + "&currentPage=" + cp,
+                    url: "/profile/user/getQuestions?record=" + re + "&currentPage=" + cp,
                     success: function (data) {
                         for (var i = 0; i < data.questions.length; i++) {
                             var title = data.questions[i].title;
@@ -120,61 +120,10 @@
 </head>
 <body>
 
+<!--导航栏-->
+<div th:replace="index::navigation">
 
-<!-导航栏-->
-<nav class="navbar navbar-default" th:fragment="navigation">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                <span class="sr-only">简e社区</span>
-            </button>
-            <a class="navbar-brand" href="/">简e社区</a>
-        </div>
-
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <form class="navbar-form navbar-left">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="输入搜索的话题">
-                </div>
-                <button type="submit" class="btn btn-default">搜索</button>
-            </form>
-            <ul class="nav navbar-nav navbar-right">
-                <li th:if="${session.user}">
-                    <a href="/publish">提问</a>
-                </li>
-                <li th:unless="${session.user}">
-                    <a href="https://github.com/login/oauth/authorize?client_id=89cceb7e8f19ce08fdea&redirect_uri=http://localhost:8080/callback&scope=user&state=1">登陆</a>
-                </li>
-
-                <li id="li_dropdown" class="dropdown" th:if="${session.user}">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false">
-                        <span th:text="${session.user.name}"></span>
-                        <span class="caret"></span>
-                    </a>
-
-
-                    <ul class="dropdown-menu"  aria-labelledby="dropdownMenu1">
-                        <li><a href="/profile/questions">问题中心</a></li>
-                        <li><a href="#">个人资料</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#">退出登陆</a></li>
-                    </ul>
-                </li>
-
-                <li th:width="58px" th:height="50px">
-                    <a>
-                        <img class="img-rounded" th:if="${session.user}" th:src="${session.user.avatarUrl}" width="40px" height="35px">
-                        <img class="img-rounded" th:unless="${session.user}" th:src="@{img/a.png}" width="40px" height="35px">
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-
+</div>
 
 
 
@@ -184,7 +133,10 @@
 <div class="container-fluid main">
     <div class="row">
         <div class="col-lg-10 col-md-12 col-sm-12 col-xs-12">
-            <h4><span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>发现</h4>
+            <h4>
+                <span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>
+                <span th:text="${titleBar}"></span>
+            </h4>
             <hr>
 
             <!--问题-->
@@ -206,7 +158,15 @@
 
         </div>
         <div class="col-lg-2 col-md-12 col-sm-12 col-xs-12">
-            <h3>热门话题</h3>
+            <div id="div_question" class="list-group">
+                <a th:href="@{/profile/questions}" class="list-group-item active">
+                   我的问题
+                </a>
+                <a href="#" class="list-group-item">
+                    <span class="badge">6</span>
+                    最新回复
+                </a>
+            </div>
         </div>
     </div>
 </div>
