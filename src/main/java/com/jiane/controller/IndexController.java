@@ -3,16 +3,14 @@ package com.jiane.controller;
 import com.jiane.dto.QuestionDTO;
 import com.jiane.mapper.QuestionMapper;
 import com.jiane.mapper.UserMapper;
-import com.jiane.model.User;
 import com.jiane.service.QuestionService;
+import com.jiane.utils.PagingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,23 +26,11 @@ public class IndexController {
     @Autowired
     QuestionService questionService;
 
+    @Autowired
+    PagingUtil pagingUtil;
+
     @GetMapping("/")
     public String gotoIndex(HttpServletRequest request){
-        Cookie[] cookies = request.getCookies();
-        if (cookies==null||cookies.length==0){
-            return "index";
-        }
-        for (Cookie cookie : cookies) {
-            if ("token".equals(cookie.getName())) {
-                String token = cookie.getValue();
-                User user = userMapper.findByToken(token);
-                System.out.println(user);
-                if (user != null) {
-                    request.getSession().setAttribute("user", user);
-                }
-                break;
-            }
-        }
         return "index";
     }
 
@@ -67,7 +53,7 @@ public class IndexController {
 
         Integer start = (myCurrentPage - 1) * record;
         Integer end = record;
-        List<QuestionDTO> questions = questionService.getQuestions(start,end);
+        List<QuestionDTO> questions = questionService.getQuestions(start,end,null);
 
         Map<String, Object> map = new HashMap<>();
 
@@ -75,32 +61,7 @@ public class IndexController {
         map.put("currentPage", myCurrentPage);//当前页
         map.put("questions", questions);//当前页的数据
         map.put("record", record);//每页条数
-        List<Integer> pages = new ArrayList<>();
-        if (totalPages<5){
-            for (int i = 1 ; i <=totalPages; i++){
-                pages.add(i);
-            }
-        }else{
-            if(myCurrentPage<4){
-                pages.add(1);
-                pages.add(2);
-                pages.add(3);
-                pages.add(4);
-                pages.add(5);
-            } else if (myCurrentPage>=totalPages-2) {
-                pages.add(totalPages-4);
-                pages.add(totalPages-3);
-                pages.add(totalPages-2);
-                pages.add(totalPages-1);
-                pages.add(totalPages);
-            }else{
-                pages.add(myCurrentPage-2);
-                pages.add(myCurrentPage-1);
-                pages.add(myCurrentPage);
-                pages.add(myCurrentPage+1);
-                pages.add(myCurrentPage+2);
-            }
-        }
+        List<Integer> pages = pagingUtil.getPageList(myCurrentPage,totalPages);
         map.put("pagetoolbar", pages);
         return map;
     }

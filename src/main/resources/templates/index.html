@@ -41,17 +41,18 @@
                             var likeCount = data.questions[i].likeCount;
                             var viewCount = data.questions[i].viewCount;
                             var commentCount = data.questions[i].commentCount;
+                            var questionid = data.questions[i].id;
                             $("#questions").append(
                                 " <div class='media'>\n" +
                                 "                <div class='media-left'>\n" +
-                                "                    <a href='#'>\n" +
+                                "                    <a style='text-decoration:none;' href='/questions/"+questionid+"'>\n" +
                                 "                        <img  class='question-img media-object img-rounded' src='" + avatarUrl + "'>\n" +
                                 "                    </a>\n" +
                                 "                </div>\n" +
                                 "                <div class='media-body'>\n" +
-                                "                    <a href='#'><h4 class='media-heading'>" + title + "</h4>\n</a> " +
+                                "                    <a style='text-decoration:none;' href='/questions/"+questionid+"'><h4 class='media-heading'>" + title + "</h4>\n</a> " +
                                 "                    <span class='text-desc'>\n" +
-                                "                        • " + commentCount + " 个评论 • " + viewCount + " 次浏览 • " + likeCount + " 个点赞\n" +
+                                "                        • " + commentCount + " 个评论    • " + viewCount + " 次浏览    • " + likeCount + " 个点赞\n" +
                                 "                    </span>\n" +
                                 "                </div>\n" +
                                 "            </div>\n" +
@@ -67,12 +68,12 @@
                         var pagetoolbar = " <nav id=\"nav_navigation\" aria-label=\"Page navigation\" style=\"text-align: center;\">\n" +
                             "                                <ul id=\"ul_page\" class=\"pagination\">"+
                             "                                   <li id=\"page_first\">\n" +
-                        "                                        <a  href=\"javascript:page(" + 1 + "," + record + ")\" aria-label=\"Previous\">\n" +
+                        "                                        <a style='text-decoration:none;'  href=\"javascript:page(" + 1 + "," + record + ")\" aria-label=\"Previous\">\n" +
                         "                                            <span aria-hidden=\"true\" class='glyphicon glyphicon-chevron-left'></span>\n" +
                         "                                        </a>\n" +
                         "                                      </li>\n " +
                             "                                    <li id=\"page_previous\">\n" +
-                            "                                        <a  href=\"javascript:page(" + (currentPage - 1) + "," + record + ")\" aria-label=\"Previous\">\n" +
+                            "                                        <a style='text-decoration:none;'  href=\"javascript:page(" + (currentPage - 1) + "," + record + ")\" aria-label=\"Previous\">\n" +
                             "                                            <span aria-hidden=\"true\" class='glyphicon glyphicon-menu-left'></span>\n" +
                             "                                        </a>\n" +
                             "                                    </li>\n";
@@ -83,19 +84,19 @@
                             var mypagetoolbar = data.pagetoolbar[j];
 
                             if(mypagetoolbar==data.currentPage){
-                                pagetoolbar += " <li  id=\"page_"+(j+1)+"\"><a style='background-color:#5bc0de;'  href=\"javascript:page(" + mypagetoolbar+ "," + myrecord  + ")\">" + mypagetoolbar + "</a></li>"
+                                pagetoolbar += " <li  id=\"page_"+(j+1)+"\"><a  style='text-decoration:none;background-color:#5bc0de;'  href=\"javascript:page(" + mypagetoolbar+ "," + myrecord  + ")\">" + mypagetoolbar + "</a></li>"
                             }else{
-                                pagetoolbar += " <li  id=\"page_"+(j+1)+"\"><a href=\"javascript:page(" + mypagetoolbar+ "," + myrecord  + ")\">" + mypagetoolbar + "</a></li>"
+                                pagetoolbar += " <li  id=\"page_"+(j+1)+"\"><a style='text-decoration:none;' href=\"javascript:page(" + mypagetoolbar+ "," + myrecord  + ")\">" + mypagetoolbar + "</a></li>"
                             }
 
                         }
                         pagetoolbar += "                        <li id=\"page_next\">\n" +
-                            "                                        <a href=\"javascript:page(" + (currentPage + 1) + "," + record + ")\" aria-label=\"Next\">\n" +
+                            "                                        <a style='text-decoration:none;' href=\"javascript:page(" + (currentPage + 1) + "," + record + ")\" aria-label=\"Next\">\n" +
                             "                                            <span aria-hidden=\"true\" class='glyphicon glyphicon-menu-right'></span>\n" +
                             "                                        </a>\n" +
                             "                                    </li> "+
                             "                                <li id=\"page_last\">\n "+
-                        "                                        <a href=\"javascript:page(" + totalPage + "," + record + ")\" aria-label=\"Next\">\n" +
+                        "                                        <a style='text-decoration:none;' href=\"javascript:page(" + totalPage + "," + record + ")\" aria-label=\"Next\">\n" +
                         "                                            <span aria-hidden=\"true\" class='glyphicon glyphicon-chevron-right'></span>\n" +
                         "                                        </a>\n" +
                         "                                    </li>\n" +
@@ -113,6 +114,7 @@
                         }
                     }
                 });
+
             }
 
     </script>
@@ -159,7 +161,7 @@
                         <li><a href="/profile/questions">问题中心</a></li>
                         <li><a href="#">个人资料</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="#">退出登陆</a></li>
+                        <li><a href="/loginOut">退出登陆</a></li>
                     </ul>
                 </li>
 

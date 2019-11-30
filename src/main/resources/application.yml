@@ -18,4 +18,7 @@ spring:
 logging:
   level:
     com.jiane.mapper.QuestionMapper: debug
-
+#com:
+#  jiane:
+#    advice-packge-name: com.jiane
+#    model-and-view-url: /

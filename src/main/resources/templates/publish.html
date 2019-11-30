@@ -4,58 +4,78 @@
     <meta charset="UTF-8">
     <title>发布-简e社区</title>
 
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="css/community.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/community.css">
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
 
 
-    <script src="js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
 
 
     <script>
+
+        function  callback(title,description,tags,data){
+
+            $("#msg").empty();
+            if(data.msg=="请先登录"){
+                var errormsg = "<div class='alert alert-danger alert-dismissible' role='alert'>" +
+                    "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>"+
+                    "<span aria-hidden='true'>&times;</span>"+
+                    "</button>"+
+                    "<strong>错误：</strong>"+data.msg+
+                    "</div>";
+                $("#msg").append(errormsg);
+            }else{
+                var successmsg = "<div class='alert alert-success alert-dismissible' role='alert'>" +
+                    "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>"+
+                    "<span aria-hidden='true'>&times;</span>"+
+                    "</button>"+
+                    "<strong>成功：</strong>"+data.msg+
+                    "</div>";
+                $("#msg").append(successmsg);
+                var hr = "/";
+                window.location.href = hr;
+            }
+        }
+
 
         $(function(){
 
 
 
             $("#btn-publish").click(function () {
-
                 var title = $("#title").val();
                 var description=$("#description").val();
                 var tags = $("#tags").val();
+                var id = $("#question_id").val();
+                var data1 = "title=" + title + "&description=" + description + "&tags=" + tags+"&id="+id;
+                var data2 = "title=" + title + "&description=" + description + "&tags=" + tags+"&id=";
+                if (!isNaN(id)){
+                    $.ajax({
+                        type: "POST",
+                        dataType :"JSON",
+                        data: data1,
+                        url:"/publish",
+                        success:function(data){
+                            callback(title,description,tags,data);
+                        },
+                    });
+                }else{
+                    $.ajax({
+                        type: "post",
+                        dataType :"JSON",
+                        data: data2,
+                        url:"publish",
+                        success:function(data){
+                            callback(title,description,tags,data);
+                        },
+                    });
+                }
 
 
-
-                $.ajax({
-                    type: "post",
-                    dataType :"JSON",
-                    data: "title=" + title + "&description=" + description + "&tags=" + tags,
-                    url:"publish",
-                    success:function(data){
-                        if(data.msg=="请先登录"){
-                            var errormsg = "<div class='alert alert-danger alert-dismissible' role='alert'>" +
-                                "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>"+
-                                "<span aria-hidden='true'>&times;</span>"+
-                                "</button>"+
-                                "<strong>错误：</strong>"+data.msg+
-                                "</div>";
-                            $("#msg").append(errormsg);
-                        }else{
-                            var successmsg = "<div class='alert alert-success alert-dismissible' role='alert'>" +
-                                "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>"+
-                                "<span aria-hidden='true'>&times;</span>"+
-                                "</button>"+
-                                "<strong>成功：</strong>"+data.msg+
-                                "</div>";
-                            $("#msg").append(successmsg);
-                            var hr = "/";
-                                window.location.href = hr;
-                        }
-                    },
-                });
 
             });
         });
@@ -80,18 +100,22 @@
             <form action="/publsh" method="post">
                 <div class="form-group">
                     <label for="title">问题标题：</label>
-                    <input type="text" class="form-control" id="title" name="title" placeholder="问题标题...">
+                    <input th:if="${question}" type="text" class="form-control" th:value="${question.title}" id="title" name="title" placeholder="问题标题...">
+                    <input th:unless="${question}" type="text" class="form-control" id="title" name="title" placeholder="问题标题...">
+                    <input th:if="${question}" id="question_id" type="hidden" th:value="${question.id}">
                 </div>
 
                 <div class="form-group">
                     <label for="description">问题内容(必填,请参照右侧提示)：</label>
-                    <textarea name="description" id="description" class="form-control" cols="30" rows="10"></textarea>
+                    <textarea th:if="${question}" name="description" id="description" th:text="${question.description}" class="form-control" cols="30" rows="10"></textarea>
+                    <textarea th:unless="${question}" name="description" id="description"  class="form-control" cols="30" rows="10"></textarea>
                 </div>
 
 
                 <div class="form-group">
                     <label for="tags">添加标签：</label>
-                    <input type="text" class="form-control" id="tags" name="tags" placeholder="输入标签,以,分隔">
+                    <input th:if="${question}" type="text" class="form-control" th:value="${question.tags}" id="tags" name="tags" placeholder="输入标签,以,分隔">
+                    <input th:unless="${question}" type="text" class="form-control"  id="tags" name="tags" placeholder="输入标签,以,分隔">
                 </div>
 
                 <div class="container-fluid">
@@ -101,7 +125,8 @@
                         </div>
                     </div>
                     <div id="div_right" class="col-lg-3 col-md-12 col-sm-12 col-xs-12" style="float: right;">
-                        <a id="btn-publish" type="button" class="btn btn-success btn-publish">发布</a>
+                        <a th:unless="${question}"  id="btn-publish" type="button" class="btn btn-success btn-publish">发布</a>
+                        <a th:if="${question}" id="btn-publish" type="button" class="btn btn-success btn-publish">更新</a>
                     </div>
 
                 </div>

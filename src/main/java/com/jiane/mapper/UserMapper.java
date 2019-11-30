@@ -3,6 +3,7 @@ package com.jiane.mapper;
 import com.jiane.model.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 @Mapper
@@ -18,4 +19,7 @@ public interface UserMapper {
 
     @Select("select id , name , account_id accountId , token , gmt_create gmtCreate , gmt_modified gmtModified ,avatar_url avatarUrl from user where id = #{creator}")
     User findUserById(Integer creator);
+
+    @Select("select id , name , account_id accountId , token , gmt_create gmtCreate , gmt_modified gmtModified ,avatar_url avatarUrl from user where account_id = #{accountId}")
+    User findUserByAcount(User user);
 }

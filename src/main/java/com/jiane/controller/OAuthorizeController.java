@@ -5,6 +5,7 @@ import com.jiane.dto.GithubUser;
 import com.jiane.mapper.UserMapper;
 import com.jiane.model.User;
 import com.jiane.provice.GithubProvider;
+import com.jiane.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.UUID;
@@ -32,8 +34,9 @@ public class OAuthorizeController {
     String redirect_uri;
 
 
+
     @Autowired
-    UserMapper userMapper;
+    UserService userService;
 
     @GetMapping("/callback")
     public String callback(@RequestParam("code") String code,
@@ -58,23 +61,32 @@ public class OAuthorizeController {
         }else{
 //            登陆成功
 
+
             User user = new User();
-            Long sysTime = System.currentTimeMillis();
-            String token = UUID.randomUUID().toString();
+
             user.setName(githubUser.getName())
-                    .setToken(token)
                     .setAccountId(githubUser.getId())
-                    .setGmtCreate(sysTime)
-                    .setGmtModified(sysTime)
                     .setAvatarUrl(githubUser.getAvatar_url());
 
+            User user1 = userService.addOrUpdateUser(user);
 
-            userMapper.insert(user);
-            Cookie cookie = new Cookie("token", token);
+            Cookie cookie = new Cookie("token", user1.getToken());
             cookie.setMaxAge(60*60*24);
             response.addCookie(cookie);
-//            session.setAttribute("githubUser",githubUser);
             return "redirect:/";
         }
+    }
+
+
+
+    @GetMapping("/loginOut")
+    public String loginOut(HttpServletRequest request , HttpServletResponse response){
+        request.getSession().removeAttribute("user");
+
+        //移出Cookie
+        Cookie cookie = new Cookie("token", null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
     }
 }

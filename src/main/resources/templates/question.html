@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>问题详情-问题中心</title>
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/community.css">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+
+
+</head>
+<body>
+
+<!--导航栏-->
+<div th:replace="index::navigation">
+
+</div>
+
+
+
+
+
+
+<div class="container-fluid main">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <h4>
+                <h4>
+                    <span th:text="${question.title}"></span>
+                </h4>
+                <span class="text-desc">
+                    作者：<span th:text="${question.user.name}"></span> |
+                    发布时间：<span th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd Hh:mm:ss')}"></span> |
+                    阅读数：<span th:text="${question.viewCount}"></span>
+                </span>
+            </h4>
+            <hr>
+
+            <!--问题-->
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <span style="width: 100%" th:text="${question.description}"></span>
+
+                <hr/>
+
+                    <div th:if="${session.user}">
+                        <a th:if="${question.user.id==session.user.id}" style="text-decoration:none;color: #999" th:href="@{'/publish/'+${question.id}}">
+                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"> </span>
+                            编辑
+                        </a>
+                    </div>
+
+
+
+            </div>
+        </div>
+
+
+
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h4>发布人</h4>
+                <div class="media">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class=" media-object img-rounded"  th:src="${question.user.avatarUrl}" width="40px" height="40px">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading" >
+                            <a style="text-decoration: none;" href="#" th:text="${question.user.name}"></a>
+                        </h4>
+                            <span style="font-size: 13px;color:#999" th:text="23个回复"></span> |
+                            <span style="font-size: 13px;color:#999" th:text="5518次浏览"></span>
+
+                    </div>
+                </div>
+            </div>
+
+            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12"/>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h4>相关问题</h4>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
