@@ -1,6 +1,8 @@
 package com.jiane.service;
 
 import com.jiane.dto.QuestionDTO;
+import com.jiane.exception.CustomizeErrorCode;
+import com.jiane.exception.CustomizeException;
 import com.jiane.mapper.QuestionMapper;
 import com.jiane.mapper.UserMapper;
 import com.jiane.model.Question;
@@ -49,6 +51,9 @@ public class QuestionService {
 
     public QuestionDTO findQuestionById(Integer id) {
         Question question  = questionMapper.findQuestionById(id);
+        if (question==null){
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
         System.out.println(question);
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question, questionDTO);
@@ -67,7 +72,10 @@ public class QuestionService {
             questionMapper.createQuestion(question);
             return;
         }
-        questionMapper.updateQuestion(question);
+        Integer i = questionMapper.updateQuestion(question);
+        if (i == 0) {
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
 
     }
 }

@@ -1,5 +1,7 @@
 package com.jiane.controller;
 
+import com.jiane.exception.CustomizeErrorCode;
+import com.jiane.exception.CustomizeException;
 import com.jiane.mapper.QuestionMapper;
 import com.jiane.mapper.UserMapper;
 import com.jiane.model.Question;
@@ -40,6 +42,9 @@ public class PublishController {
     public String goToPublish(@PathVariable("id") Integer id, Model model, HttpSession session) {
 
         Question questionById = questionMapper.findQuestionById(id);
+        if (questionById == null) {
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
         model.addAttribute("question", questionById);
         return "publish";
     }
