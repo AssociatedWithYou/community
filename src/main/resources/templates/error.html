@@ -87,6 +87,8 @@
     <div class="jumbotron">
         <h1>出错啦!</h1>
         <p th:text="${message}">您要的信息没有找到,请稍后再试！</p>
+        <span th:if="${errorCode}" >错误码:</span>
+        <span th:text="${errorCode}"></span>
         <p><a class="btn btn-primary btn-lg" href="/" role="button">回到主页</a></p>
     </div>
 </div>

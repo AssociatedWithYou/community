@@ -22,6 +22,7 @@ public class QuestionController {
     @GetMapping("/questions/{id}")
     public String gotoQuestion(@PathVariable("id") Integer id, Model model) {
         System.out.println(id);
+        questionService.updateViewCount();
         QuestionDTO questionDto = questionService.findQuestionById(id);
         User userById = userMapper.findUserById(questionDto.getCreator());
         questionDto.setUser(userById);

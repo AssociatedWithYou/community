@@ -11,6 +11,8 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
 
+    <script src="/js/community.js"></script>
+
 
 </head>
 <body>
@@ -27,7 +29,7 @@
 
 <div class="container-fluid main">
     <div class="row">
-        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" style="padding-bottom: 10px;">
             <h4>
                 <h4>
                     <span th:text="${question.title}"></span>
@@ -43,7 +45,6 @@
             <!--问题-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <span style="width: 100%" th:text="${question.description}"></span>
-
                 <hr/>
 
                     <div th:if="${session.user}">
@@ -54,6 +55,23 @@
                     </div>
 
 
+                <hr th:if="${session.user}"/>
+                <img th:if="${session.user}" th:src="${session.user.avatarUrl}"  class="img-rounded" width="40px" height="40px">
+                <span th:if="${session.user}" th:text="${session.user.name}" style="font-size: 20px;"></span>
+                <span th:unless="${session.user}" style="font-size: 20px;">登陆后才可以评论哦</span>
+
+
+                <input type="hidden" id="question_id" th:value="${question.id}">
+
+
+                <textarea id="question_content" class="form-control" style="margin: 10px 0px;" rows="7"></textarea>
+
+                <div id="msg" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                </div>
+
+                <button th:if="${session.user}" type="button" class="btn btn-success" style="float: right;" onclick="javascript:sendPost();" >回复</button>
+                <button th:unless="${session.user}" disabled="disabled" type="button" class="btn btn-success" style="float: right;" data-toggle="tooltip" data-placement="right" title="请先登录后再回复">回复</button>
 
             </div>
         </div>

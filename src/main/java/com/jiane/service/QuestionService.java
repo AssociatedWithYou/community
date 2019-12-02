@@ -10,6 +10,8 @@ import com.jiane.model.User;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class QuestionService {
 
     @Autowired
@@ -27,6 +30,7 @@ public class QuestionService {
 
 
 
+    @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
     public List<QuestionDTO> getQuestions(Integer start, Integer end, User user) {
         List<Question> questions = null;
         if (user == null||user.getId()==null||user.getId()<1) {
@@ -49,6 +53,7 @@ public class QuestionService {
     }
 
 
+    @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
     public QuestionDTO findQuestionById(Integer id) {
         Question question  = questionMapper.findQuestionById(id);
         if (question==null){
@@ -77,5 +82,19 @@ public class QuestionService {
             throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
         }
 
+    }
+
+
+    public void updateViewCount() {
+        questionMapper.updateViewCount(1);
+    }
+
+    public Question selectQuestionById(Integer i) {
+        return questionMapper.selectQuestionById(i);
+    }
+
+
+    public void updateCommentCount(Question question) {
+        questionMapper.updateCommentCount(question);
     }
 }
