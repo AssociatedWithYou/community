@@ -37,6 +37,9 @@ public class CommentController {
         if (commentDTO.getType()==null|| !CommentTypeEnum.isExists(commentDTO.getType())){
             throw new CustomizeException(CustomizeErrorCode.TYPE_PARAM_WRONG);
         }
+        if (commentDTO.getContent().isEmpty() || commentDTO.getContent() == null) {
+            throw new CustomizeException(CustomizeErrorCode.CONTENT_IS_NULL);
+        }
 
 
         Comment comment = new Comment();

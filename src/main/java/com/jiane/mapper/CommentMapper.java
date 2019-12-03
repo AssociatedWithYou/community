@@ -1,10 +1,13 @@
 package com.jiane.mapper;
 
+import com.jiane.dto.CommentListDTO;
 import com.jiane.model.Comment;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 @Mapper
 public interface CommentMapper {
@@ -15,4 +18,8 @@ public interface CommentMapper {
 
     @Select("select id,parent_id parentId,type,commentator,gmt_create gmtCreate,gmt_modified gmtModified,like_count likeCount,content from comment where parent_id = #{parentId}")
     Comment selectCommentByParentId(@Param("parentId") Long parentId);
+
+    @Select("select id,parent_id parentId,type,commentator,gmt_create gmtCreate,gmt_modified gmtModified,like_count likeCount,content from comment where parent_id = #{id} and type = #{question}")
+    List<CommentListDTO> findAllParentCommentsByQuestionIdAndType(@Param("id") Integer id, @Param("question") Integer question);
+
 }

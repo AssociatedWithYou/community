@@ -13,6 +13,16 @@
 
     <script src="/js/community.js"></script>
 
+    <script>
+
+        $(function () {
+            $(".comment_btn").hover(function(){
+                $(this).find("span").css("color","white");
+            },function(){
+                $(this).find("span").css("color","#999");
+            });
+        });
+    </script>
 
 </head>
 <body>
@@ -29,7 +39,7 @@
 
 <div class="container-fluid main">
     <div class="row">
-        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" style="padding-bottom: 10px;">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" style="padding: 25px 25px;">
             <h4>
                 <h4>
                     <span th:text="${question.title}"></span>
@@ -40,12 +50,12 @@
                     阅读数：<span th:text="${question.viewCount}"></span>
                 </span>
             </h4>
-            <hr>
+            <hr/>
 
             <!--问题-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <span style="width: 100%" th:text="${question.description}"></span>
-                <hr/>
+                <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12"/>
 
                     <div th:if="${session.user}">
                         <a th:if="${question.user.id==session.user.id}" style="text-decoration:none;color: #999" th:href="@{'/publish/'+${question.id}}">
@@ -55,10 +65,50 @@
                     </div>
 
 
-                <hr th:if="${session.user}"/>
+                <!--回复数-->
+                <h4>
+                    <span th:text="${question.commentCount}"></span>个回复
+                </h4>
+
+                <!--回复li-->
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 0px;" th:each="comment: ${comments}">
+                    <div class="media myMdeia" >
+                        <div class="media-left pull-left">
+                            <a href="#">
+                                <img width="40px" height="40px" class="media-object" th:src="${comment.user.avatarUrl}" >
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading">
+                                <span th:text="${comment.user.name}"></span>
+                            </h4>
+                            <span th:text="${comment.content}"></span>
+
+                            <br/>
+                            <button class="btn btn-default comment_btn">
+                                <span class="glyphicon glyphicon-thumbs-up comment_span"></span>
+                            </button>
+
+                            <button class="btn btn-default comment_btn" >
+                                <span  class="glyphicon glyphicon-comment comment_span"></span>
+                            </button>
+                                <span class="pull-right" style="color: #999;" th:text="${#dates.format(comment.gmtCreate,'yyyy-MM-dd')}"></span>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+                <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:if="${session.user}"/>
                 <img th:if="${session.user}" th:src="${session.user.avatarUrl}"  class="img-rounded" width="40px" height="40px">
                 <span th:if="${session.user}" th:text="${session.user.name}" style="font-size: 20px;"></span>
-                <span th:unless="${session.user}" style="font-size: 20px;">登陆后才可以评论哦</span>
+                <span th:unless="${session.user}" style="font-size: 20px;">
+                    登陆后才可以评论哦&nbsp;
+                    <a style="text-decoration:none;" href="javascript:gotoLogin();">去登陆</a> </span>
 
 
                 <input type="hidden" id="question_id" th:value="${question.id}">
@@ -71,14 +121,14 @@
                 </div>
 
                 <button th:if="${session.user}" type="button" class="btn btn-success" style="float: right;" onclick="javascript:sendPost();" >回复</button>
-                <button th:unless="${session.user}" disabled="disabled" type="button" class="btn btn-success" style="float: right;" data-toggle="tooltip" data-placement="right" title="请先登录后再回复">回复</button>
+                <!--<button th:unless="${session.user}" disabled="disabled" type="button" class="btn btn-success" style="float: right;" data-toggle="tooltip" data-placement="right" title="请先登录后再回复">回复</button>-->
 
             </div>
         </div>
 
 
 
-        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12" style="padding:25px 25px; ">
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <h4>发布人</h4>

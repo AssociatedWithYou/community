@@ -12,7 +12,18 @@
     <script src="js/bootstrap.min.js"></script>
 
 
+
     <script>
+
+        window.onload = function(){
+            var close = window.localStorage.getItem("closable");
+            if(close == "true"){
+                window.close();
+                localStorage.removeItem("closable");
+            }
+        }
+
+
         $(function(){
             page(1,5);
 

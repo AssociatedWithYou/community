@@ -18,7 +18,7 @@ public interface UserMapper {
     User findByToken(String token);
 
     @Select("select id , name , account_id accountId , token , gmt_create gmtCreate , gmt_modified gmtModified ,avatar_url avatarUrl from user where id = #{creator}")
-    User findUserById(Integer creator);
+    User findUserById(@Param("creator") Integer creator);
 
     @Select("select id , name , account_id accountId , token , gmt_create gmtCreate , gmt_modified gmtModified ,avatar_url avatarUrl from user where account_id = #{accountId}")
     User findUserByAcount(User user);

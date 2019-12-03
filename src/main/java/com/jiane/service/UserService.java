@@ -4,10 +4,13 @@ import com.jiane.mapper.UserMapper;
 import com.jiane.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 @Service
+@Transactional
 public class UserService {
 
     @Autowired
@@ -30,4 +33,10 @@ public class UserService {
         return userByAcountId;
     }
 
+
+    @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
+    public User findUserByCommentator(Integer aInteger) {
+        User userById = userMapper.findUserById(aInteger);
+        return userById;
+    }
 }

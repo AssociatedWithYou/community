@@ -1,5 +1,6 @@
 package com.jiane.service;
 
+import com.jiane.dto.CommentListDTO;
 import com.jiane.enums.CommentTypeEnum;
 import com.jiane.exception.CustomizeErrorCode;
 import com.jiane.exception.CustomizeException;
@@ -9,6 +10,10 @@ import com.jiane.model.Comment;
 import com.jiane.model.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class CommentService {
@@ -45,5 +50,10 @@ public class CommentService {
             commentMapper.addComment(comment);
             questionService.updateCommentCount(question);
         }
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
+    public List<CommentListDTO> findAllParentCommentsByQuestionIdAndType(Integer id, Integer question) {
+        return commentMapper.findAllParentCommentsByQuestionIdAndType(id, question);
     }
 }
