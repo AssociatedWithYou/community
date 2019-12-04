@@ -20,7 +20,7 @@ public interface QuestionMapper {
     public void createQuestion(Question question);
 
     @Select("select id,title,description,creator,gmt_create gmtCreate ,gmt_modified gmtModified,comment_count commentCount," +
-            "view_count viewCount,like_count likeCount,tags from question limit #{start},#{end}")
+            "view_count viewCount,like_count likeCount,tags from question order by gmt_create desc limit #{start},#{end} ")
     List<Question> findQuestionByPage(@Param("start") Integer start, @Param("end")Integer end);
 
     @Select("select count(1) from question")
@@ -31,7 +31,7 @@ public interface QuestionMapper {
 
 
     @Select("select id,title,description,creator,gmt_create gmtCreate ,gmt_modified gmtModified,comment_count commentCount," +
-            "view_count viewCount,like_count likeCount,tags from question where creator = #{creatorId} limit #{start},#{end}")
+            "view_count viewCount,like_count likeCount,tags from question where creator = #{creatorId} limit #{start},#{end} ")
     List<Question> findQuestionByUser(@Param("start") Integer start, @Param("end")Integer end,@Param("creatorId") Integer creatorId);
 
     @Select("select id,title,description,creator,gmt_create gmtCreate ,gmt_modified gmtModified,comment_count commentCount," +

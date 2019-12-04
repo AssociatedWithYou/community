@@ -1,10 +1,53 @@
 
 $(function(){
+
+
+
         $("#li_dropdown").hover(function(){
             $("#li_dropdown").attr("class", "dropdown open");
         },function(){
             $("#li_dropdown").attr("class", "dropdown");
         });
+
+
+
+    $(".comment_btn").hover(function () {
+        var btn = $(this).parent().find("div").attr("class").toString().indexOf("in");
+        if (btn>=0){
+           /* $(this).find("span").css("color", "white");
+            $(this).css({"background-color":"#499ef2", "background-position":"0px -28px","opacity":"1"});*/
+        } else if(btn==-1){
+            $(this).css({"background-color":"#499ef2", "background-position":"0px -28px","opacity":"1"});
+            $(this).find("span").css("color", "white");
+        }
+    }, function () {
+        var btn = $(this).parent().find("div").attr("class").toString().indexOf("in");
+        if (btn>=0){
+            // $(this).find("span").css("color", "white");
+        } else if(btn==-1){
+            $(this).css({"background-color":"#f5f5f5", "background-position":"0px -28px","opacity":"0.6"});
+            $(this).find("span").css("color", "#999");
+        }
+    });
+
+
+    $(".comment_open").click(function(){
+        var btn = $(this);
+        var clazz = btn.parent().find("div").attr("class").toString().indexOf("in");
+        var targetDIV = btn.parent().find("div");
+        if (clazz>=0) { //获取某个子串在父串中出现的下标，不存在则返回-1
+            targetDIV.removeClass("in");
+            btn.css({"background-color":"#f5f5f5","opacity":"0.6"});
+            btn.find("span").css("color","#999");
+        }else if(clazz==-1){
+            targetDIV.addClass("in");
+            btn.css({"background-color":"#499ef2","opacity":"1"});
+            btn.find("span").css({"color":"white"});
+        }
+
+    });
+
+
 });
 
 
@@ -49,6 +92,7 @@ function sendPost(){
                     "<strong>恭喜：</strong>您的评论发布成功"+
                     "</div>";
                 $("#msg").append(errormsg);
+                window.location.reload();
             } else{
                 if (data.code==1001){
                     var errormsg = "<div class='alert alert-danger alert-dismissible' role='alert'>" +
@@ -72,3 +116,15 @@ function sendPost(){
         }
     });
 }
+
+/*
+
+function openSecondLevelComment(tag){
+    // alert("a");
+    // $(".comment_open").click(function(){
+    // $(this).closest("div").find("div").addClass("in");//当前标签的指定祖先标签的指定子标签
+    var name = $(tag).tagName;
+    alert(name);
+    // alert($(this).attr("class"));
+    // });
+}*/

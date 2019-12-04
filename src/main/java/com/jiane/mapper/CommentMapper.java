@@ -19,7 +19,7 @@ public interface CommentMapper {
     @Select("select id,parent_id parentId,type,commentator,gmt_create gmtCreate,gmt_modified gmtModified,like_count likeCount,content from comment where parent_id = #{parentId}")
     Comment selectCommentByParentId(@Param("parentId") Long parentId);
 
-    @Select("select id,parent_id parentId,type,commentator,gmt_create gmtCreate,gmt_modified gmtModified,like_count likeCount,content from comment where parent_id = #{id} and type = #{question}")
+    @Select("select id,parent_id parentId,type,commentator,gmt_create gmtCreate,gmt_modified gmtModified,like_count likeCount,content from comment where parent_id = #{id} and type = #{question} order by gmt_create desc")
     List<CommentListDTO> findAllParentCommentsByQuestionIdAndType(@Param("id") Integer id, @Param("question") Integer question);
 
 }
