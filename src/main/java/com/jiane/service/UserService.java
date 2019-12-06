@@ -39,4 +39,5 @@ public class UserService {
         User userById = userMapper.findUserById(aInteger);
         return userById;
     }
+
 }

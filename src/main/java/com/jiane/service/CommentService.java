@@ -32,8 +32,9 @@ public class CommentService {
     public void replyQuestionOrComment(Comment comment) {
         if (comment.getType()== CommentTypeEnum.COMMENT.getType()){
             //回复别人的评论
-            Comment dbComment =  commentMapper.selectCommentByParentId(comment.getParentId());
+            Comment dbComment =  commentMapper.selectCommentByParentId(comment.getParentId(),CommentTypeEnum.QUESTION.getType());
             if (dbComment == null) {
+                System.out.println("==null");
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
             commentMapper.addComment(comment);

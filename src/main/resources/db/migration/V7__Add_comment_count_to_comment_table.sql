@@ -1,0 +1,1 @@
+ALTER TABLE COMMENT ADD comment_count INT default 0;
