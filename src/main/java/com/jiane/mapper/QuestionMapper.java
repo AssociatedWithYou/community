@@ -46,4 +46,8 @@ public interface QuestionMapper {
 
     @Update("update question set comment_count = comment_count+ 1 where id = #{id}")
     void updateCommentCount(Question question);
+
+    @Select("select id,title,description,creator,gmt_create gmtCreate ,gmt_modified gmtModified,comment_count commentCount,"+
+            "view_count viewCount,like_count likeCount,tags from question where tags REGEXP #{s} and id != #{id} order by  RAND() LIMIT 6")
+    List<Question> findRelatedQuestionByTags(@Param("id") Integer id, @Param("s") String s);
 }

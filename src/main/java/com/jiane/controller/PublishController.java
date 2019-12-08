@@ -5,6 +5,7 @@ import com.jiane.exception.CustomizeException;
 import com.jiane.mapper.QuestionMapper;
 import com.jiane.mapper.UserMapper;
 import com.jiane.model.Question;
+import com.jiane.model.Tag;
 import com.jiane.model.User;
 import com.jiane.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,8 @@ public class PublishController {
     UserMapper userMapper;
 
     @GetMapping("/publish")
-    public String publish(){
+    public String publish(Model model){
+        model.addAttribute("tags",Tag.getTags());
         return "publish";
     }
 
@@ -46,6 +48,7 @@ public class PublishController {
             throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
         }
         model.addAttribute("question", questionById);
+        model.addAttribute("tags",Tag.getTags());
         return "publish";
     }
 
@@ -86,6 +89,7 @@ public class PublishController {
         questionService.addOrUpdateQuestions(session,question);
 
         System.out.println("发布成功");
+        model.addAttribute("tags",Tag.getTags());
         return "{\"msg\":\"登录成功,等待跳转...\"}";
     }
 }

@@ -37,6 +37,9 @@ public class CommentService {
                 System.out.println("==null");
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
+            String s = dbComment.getId().toString();
+            Integer i = Integer.parseInt(s);
+            commentMapper.updateCommentCount(i);
             commentMapper.addComment(comment);
         }else if (comment.getType() == CommentTypeEnum.QUESTION.getType()){
             //回复问题

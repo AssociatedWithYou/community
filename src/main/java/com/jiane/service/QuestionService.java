@@ -97,4 +97,8 @@ public class QuestionService {
     public void updateCommentCount(Question question) {
         questionMapper.updateCommentCount(question);
     }
+
+    public List<Question> findRelatedQuestionByTags(Integer id, String sb) {
+        return questionMapper.findRelatedQuestionByTags(id,sb);
+    }
 }
