@@ -3,7 +3,9 @@ package com.jiane.controller;
 import com.jiane.dto.CommentListDTO;
 import com.jiane.dto.QuestionDTO;
 import com.jiane.enums.CommentTypeEnum;
+import com.jiane.mapper.NotificationMapper;
 import com.jiane.mapper.UserMapper;
+import com.jiane.model.Notification;
 import com.jiane.model.Question;
 import com.jiane.model.User;
 import com.jiane.service.CommentService;
@@ -33,6 +35,9 @@ public class QuestionController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    NotificationMapper notificationMapper;
 
     @GetMapping("/questions/{id}")
     public String gotoQuestion(@PathVariable("id") Integer id, Model model) {
@@ -102,6 +107,7 @@ public class QuestionController {
 
         model.addAttribute("questionsByTags",questions);
         model.addAttribute("comments", commentListDTOS);
+
         return "question";
     }
 

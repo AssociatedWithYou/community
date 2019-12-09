@@ -13,8 +13,15 @@
     <script src="/js/community.js"></script>
 
     <script>
+
+
         $(function(){
-            page(1,5);
+            if ($("#titleBar_id").text()=="我的问题"){
+                 page(1,5);//我的问题的问题
+            } else if ($("#titleBar_id").text()=="最新回复") {
+                 newReply(1, 5);//最新回复的分页
+            }
+           
 
             $("#li_dropdown").hover(function(){
                 $("#li_dropdown").attr("class", "dropdown open");
@@ -22,6 +29,107 @@
                 $("#li_dropdown").attr("class", "dropdown");
             });
         });
+
+        function newReply(cp,re) {
+            $("#questions").empty();
+            $("#div_pages").empty();
+
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: "/profile/user/getNotification?record=" + re + "&currentPage=" + cp,
+                success: function (data) {
+                    var msg = data.msg;
+                    var unreadCounts = data.unreadCounts;
+                    $("#newReply").text(unreadCounts);
+                    if (msg==0){
+                        var app = ' <div class="jumbotron">\n' +
+                            '                        <h3 align="center">空空如也~~</h3>\n' +
+                            '                    </div> ';
+                        $("#questions").append(app);
+
+                    }
+                    console.log(data.notifications);
+                    for (var i = 0; i < data.notifications.length; i++) {
+                        var title = data.notifications[i].question.title;
+                        var replierName = data.notifications[i].user.name;
+                        var notificationId = data.notifications[i].id;
+                        var typeName = data.notifications[i].typeName;
+                        var status = data.notifications[i].status;
+                        var gmtCreate = data.notifications[i].gmtCreate;
+                        if (status==0){
+                            $("#questions").append(" <div class=\"col-lg-12 col-md-12 col-sm-12 col-xs-12\">\n" +
+                                "                        <h4> <a href='#'>"+replierName+"</a> "+typeName+" <a href='/notification/"+notificationId+"'>"+title+"</a> <span class=\"label label-danger\">未读</span></h4>" +
+                             "                           <span class='pull-right' style='color: #999;'>"+new Date(gmtCreate).Format('yy-MM-dd hh:mm:ss ')+"</span>\n" +
+                                "                    </div>"+
+                                "            <hr class='col-lg-12 col-md-12 col-sm-12 col-xs-12'/>"
+                            );
+                        } else{
+                            $("#questions").append(" <div class=\"col-lg-12 col-md-12 col-sm-12 col-xs-12\">\n" +
+                                "                        <h4> <a href='#'>"+replierName+"</a> "+typeName+" <a href='/notification/"+notificationId+"'>"+title+"</a> </h4>\n" +
+                                "                           <span class='pull-right' style='color: #999;'>"+new Date(gmtCreate).Format('yy-MM-dd hh:mm:ss')+"</span>\n" +
+                                "                    </div>"+
+                                "            <hr class='col-lg-12 col-md-12 col-sm-12 col-xs-12'/>"
+                            );
+                        }
+
+                    }
+
+
+                    var record = data.record;
+                    var currentPage = data.currentPage;
+                    var totalPage = data.totalPage;
+                    var pagetoolbar = " <nav id=\"nav_navigation\" aria-label=\"Page navigation\" style=\"text-align: center;\">\n" +
+                        "                                <ul id=\"ul_page\" class=\"pagination\">"+
+                        "                                   <li id=\"page_first\">\n" +
+                        "                                        <a  href=\"javascript:newReply(" + 1 + "," + record + ")\" aria-label=\"Previous\">\n" +
+                        "                                            <span aria-hidden=\"true\" class='glyphicon glyphicon-chevron-left'></span>\n" +
+                        "                                        </a>\n" +
+                        "                                      </li>\n " +
+                        "                                    <li id=\"page_previous\">\n" +
+                        "                                        <a  href=\"javascript:newReply(" + (currentPage - 1) + "," + record + ")\" aria-label=\"Previous\">\n" +
+                        "                                            <span aria-hidden=\"true\" class='glyphicon glyphicon-menu-left'></span>\n" +
+                        "                                        </a>\n" +
+                        "                                    </li>\n";
+
+
+                    for (var j = 0; j < data.pagetoolbar.length; j++) {
+                        var myrecord = data.record;
+                        var mypagetoolbar = data.pagetoolbar[j];
+
+                        if(mypagetoolbar==data.currentPage){
+                            pagetoolbar += " <li  id=\"page_"+(j+1)+"\"><a style='background-color:#5bc0de;'  href=\"javascript:newReply(" + mypagetoolbar+ "," + myrecord+ ")\">" + mypagetoolbar + "</a></li>"
+                        }else{
+                            pagetoolbar += " <li  id=\"page_"+(j+1)+"\"><a href=\"javascript:newReply(" + mypagetoolbar+ "," + myrecord  + ")\">" + mypagetoolbar + "</a></li>"
+                        }
+
+                    }
+                    pagetoolbar += "                        <li id=\"page_next\">\n" +
+                        "                                        <a href=\"javascript:newReply(" + (currentPage + 1) + "," + record + ")\" aria-label=\"Next\">\n" +
+                        "                                            <span aria-hidden=\"true\" class='glyphicon glyphicon-menu-right'></span>\n" +
+                        "                                        </a>\n" +
+                        "                                    </li> "+
+                        "                                <li id=\"page_last\">\n "+
+                        "                                        <a href=\"javascript:newReply(" + totalPage + "," + record + ")\" aria-label=\"Next\">\n" +
+                        "                                            <span aria-hidden=\"true\" class='glyphicon glyphicon-chevron-right'></span>\n" +
+                        "                                        </a>\n" +
+                        "                                    </li>\n" +
+                        "                                </ul>\n" +
+                        "                            </nav>";
+
+                    $("#div_pages").append(pagetoolbar);
+
+                    if (cp==1){
+                        $("#page_previous").hide();
+                        $("#page_first").hide();
+                    }
+                    if(currentPage==totalPage){
+                        $("#page_next").hide();
+                        $("#page_last").hide();
+                    }
+                }
+            });
+        }
 
             function page(cp,re) {
 
@@ -35,6 +143,16 @@
                     dataType: "json",
                     url: "/profile/user/getQuestions?record=" + re + "&currentPage=" + cp,
                     success: function (data) {
+                        var unreadCounts = data.unreadCounts;
+                        $("#newReply").text(unreadCounts);
+                        var msg = data.msg;
+                        if (msg==0){
+                            var app = ' <div class="jumbotron">\n' +
+                                '                        <h3 align="center">空空如也~~</h3>\n' +
+                                '                    </div> ';
+                            $("#questions").append(app);
+
+                        }
                         for (var i = 0; i < data.questions.length; i++) {
                             var title = data.questions[i].title;
                             var avatarUrl = data.questions[i].user.avatarUrl;
@@ -108,7 +226,8 @@
                         if (cp==1){
                             $("#page_previous").hide();
                             $("#page_first").hide();
-                        }else if(currentPage==totalPage){
+                        }
+                        if(currentPage==totalPage){
                             $("#page_next").hide();
                             $("#page_last").hide();
                         }
@@ -135,37 +254,39 @@
 <div class="container-fluid main">
     <div class="row">
         <div class="col-lg-10 col-md-12 col-sm-12 col-xs-12">
-            <h4>
-                <!--<span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>-->
-                <span th:text="${titleBar}"></span>
-            </h4>
-            <hr>
 
-            <!--问题-->
-            <div id="questions">
-            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h4>
+                    <!--<span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>-->
+                    <span id="titleBar_id" th:text="${titleBar}"></span>
+                </h4>
+                <hr>
+
+                <!--问题-->
+                <div id="questions">
+
+                </div>
 
 
-            <!--分页栏-->
+                <!--分页栏-->
 
-            <div class="container-fluid">
-                <div class="row">
-                    <div id="div_pages" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div id="div_pages" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        </div>
                     </div>
                 </div>
+
             </div>
-
-
-
 
         </div>
         <div class="col-lg-2 col-md-12 col-sm-12 col-xs-12">
             <div id="div_question" class="list-group">
-                <a th:href="@{/profile/questions}" class="list-group-item active">
+                <a th:href="@{/profile/questions}" class="list-group-item" th:classappend="${titleBar}=='我的问题'?'active':''">
                    我的问题
                 </a>
-                <a href="#" class="list-group-item">
-                    <span class="badge">6</span>
+                <a th:href="@{/profile/reply}" class="list-group-item"  th:classappend="${titleBar}=='最新回复'?'active':''">
+                    <span id="newReply" class="badge"></span>
                     最新回复
                 </a>
             </div>
