@@ -1,6 +1,7 @@
 package com.jiane.interceptor;
 
 
+import com.jiane.mapper.NotificationMapper;
 import com.jiane.mapper.UserMapper;
 import com.jiane.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +19,17 @@ public class SessionInterceptor implements HandlerInterceptor {
     @Autowired
     UserMapper userMapper;
 
+    @Autowired
+    NotificationMapper notificationMapper;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         System.out.println("拦截器执行了");
         User user = (User)request.getSession().getAttribute("user");
         if (user!=null&&user.getId()!=null){
+            Integer unReadCountsByUser = notificationMapper.findUnReadCountsByUser(user.getId());
+            request.getSession().setAttribute("unReadCount",unReadCountsByUser);
+            System.out.println("通知数："+unReadCountsByUser);
             return true;
         }
         Cookie[] cookies = request.getCookies();
@@ -37,7 +44,10 @@ public class SessionInterceptor implements HandlerInterceptor {
                     System.out.println("B");
                     System.out.println(user);
                     if (user != null) {
+                        Integer unReadCountsByUser = notificationMapper.findUnReadCountsByUser(user.getId());
+                        request.getSession().setAttribute("unReadCount",unReadCountsByUser);
                         request.getSession().setAttribute("user", user);
+                        System.out.println("通知数："+unReadCountsByUser);
                     }
                     break;
                 }

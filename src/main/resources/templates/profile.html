@@ -40,8 +40,6 @@
                 url: "/profile/user/getNotification?record=" + re + "&currentPage=" + cp,
                 success: function (data) {
                     var msg = data.msg;
-                    var unreadCounts = data.unreadCounts;
-                    $("#newReply").text(unreadCounts);
                     if (msg==0){
                         var app = ' <div class="jumbotron">\n' +
                             '                        <h3 align="center">空空如也~~</h3>\n' +
@@ -143,8 +141,6 @@
                     dataType: "json",
                     url: "/profile/user/getQuestions?record=" + re + "&currentPage=" + cp,
                     success: function (data) {
-                        var unreadCounts = data.unreadCounts;
-                        $("#newReply").text(unreadCounts);
                         var msg = data.msg;
                         if (msg==0){
                             var app = ' <div class="jumbotron">\n' +
@@ -286,7 +282,7 @@
                    我的问题
                 </a>
                 <a th:href="@{/profile/reply}" class="list-group-item"  th:classappend="${titleBar}=='最新回复'?'active':''">
-                    <span id="newReply" class="badge"></span>
+                    <span id="newReply" class="badge" th:text="${session.unReadCount}">0</span>
                     最新回复
                 </a>
             </div>

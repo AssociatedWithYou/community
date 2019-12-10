@@ -16,7 +16,7 @@ public interface NotificationMapper {
     @Select("select count(id) from notification where by_replier_id = #{userId}")
     Integer findAllNotificationCountsByUser(@Param("userId") Integer userId);
 
-    @Select("select id,gmt_create gmtCreate,type ,status,replier_id replierId,by_replier_id byReplierId,question_id questionId from notification where by_replier_id = #{userId} order by gmt_create desc limit #{start},#{end}")
+    @Select("select id,gmt_create gmtCreate,type ,status,replier_id replierId,by_replier_id byReplierId,question_id questionId from notification where by_replier_id = #{userId} order by status, gmt_create desc limit #{start},#{end}")
     List<Notification> getNotifications(@Param("start") Integer start, @Param("end") Integer end, @Param("userId") Integer userId);
 
 

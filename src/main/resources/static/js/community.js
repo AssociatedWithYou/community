@@ -1,20 +1,4 @@
 $(function () {
-    /*问题页标签展示*/
-    var tag = $("#showTags").val();
-    if (tag!=""){
-        var tags = tag.split(",");
-        for (var i = 0 ; i < tags.length ; i++){
-            var t = ' <span class="label label-info" style="font-size: 100%;margin-right:3px;">\n' +
-                '                         <span class="glyphicon glyphicon-tags" style="color:white;"></span>\n' +
-                '                        <span>'+tags[i]+'</span>\n' +
-                '                    </span>';
-            $("#tagDiv").append(t);
-        }
-    }
-
-
-
-
 
     $("#li_dropdown").hover(function () {
         $("#li_dropdown").attr("class", "dropdown open");

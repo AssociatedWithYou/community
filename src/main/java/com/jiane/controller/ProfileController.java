@@ -97,10 +97,6 @@ public class ProfileController {
         List<Integer> pages = pagingUtil.getPageList(myCurrentPage,totalPages);
         map.put("pagetoolbar", pages);
 
-        //未读的回复数
-        Integer unreadCounts = notificationService.findUnReadCountsByUser(user);
-        map.put("unreadCounts", unreadCounts);
-
         System.out.println("profile:");
         for (int i = 0; i < notifications.size(); i++) {
             System.out.println(notifications.get(i));
@@ -157,9 +153,6 @@ public class ProfileController {
         for (Integer page : pages) {
             System.out.println(page);
         }
-        //未读的回复数
-        Integer unreadCounts = notificationService.findUnReadCountsByUser(user);
-        map.put("unreadCounts", unreadCounts);
         return map;
     }
 }

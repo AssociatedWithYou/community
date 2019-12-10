@@ -4,16 +4,21 @@
     <meta charset="UTF-8">
     <title>发布-简e社区</title>
 
+    <link rel="stylesheet" href="/markdown/css/editormd.css">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/community.css">
-
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-
+    <!--<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>-->
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/markdown/js/editormd.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/community.js"></script>
 
-    <script>
+
+
+
+
+    <script type="text/javascript">
 
         function getQuestionTags(element){
             var value = element.getAttribute("data-tag");
@@ -56,6 +61,19 @@
         $(function(){
 
 
+            //初始化markdown编辑器
+            var editor = editormd("question-editor", {
+                width  : "100%",
+                height : "560",
+                path   : "/markdown/lib/",
+                placeholder:"请输入问题描述...",
+                watch:false, //取消自动预览
+
+                //文件上传的属性
+                imageUpload    : true,//开启文件上传
+                imageFormats   : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                imageUploadURL : "/question/imgUpload",
+            });
 
             $("#btn-publish").click(function () {
                 var title = $("#title").val();
@@ -94,6 +112,7 @@
     </script>
 
 
+
 </head>
 <body>
 
@@ -116,10 +135,10 @@
                     <input  th:if="${question}" id="question_id" type="hidden" th:value="${question.id}">
                 </div>
 
-                <div class="form-group">
+                <div id="question-editor" class="form-group">
                     <label for="description">问题内容(必填,请参照右侧提示)：</label>
-                    <textarea  autocomplete="off" th:if="${question}" name="description" id="description" th:text="${question.description}" class="form-control" cols="30" rows="10"></textarea>
-                    <textarea  autocomplete="off" th:unless="${question}" name="description" id="description"  class="form-control" cols="30" rows="10"></textarea>
+                    <textarea  class="form-control" style="display: none;" autocomplete="off" th:if="${question}" name="description" id="description" th:text="${question.description}"  cols="30" rows="10"></textarea>
+                    <textarea  class="form-control" style="display: none;" autocomplete="off" th:unless="${question}" name="description" id="description"   cols="30" rows="10"></textarea>
                 </div>
 
 

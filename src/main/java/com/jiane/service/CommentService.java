@@ -48,7 +48,7 @@ public class CommentService {
             commentMapper.updateCommentCount(i);
             commentMapper.addComment(comment);
 
-            /*回复评论时记录信息*/
+            /*回复评论时记录通知信息*/
             createNotyfy(comment,dbComment.getParentId(), NotificationTypeEnum.REPLY_COMMENT.getType(), dbComment.getCommentator());
 
         }else if (comment.getType() == CommentTypeEnum.QUESTION.getType()){
@@ -63,7 +63,7 @@ public class CommentService {
             }
             commentMapper.addComment(comment);
             questionService.updateCommentCount(question);
-            /*回复评论时记录信息*/
+            /*回复评论时记录通知信息*/
             createNotyfy(comment,comment.getParentId(), NotificationTypeEnum.REPLY_QUESTION.getType(), question.getCreator());
         }
     }

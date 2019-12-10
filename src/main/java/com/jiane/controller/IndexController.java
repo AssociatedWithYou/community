@@ -39,9 +39,13 @@ public class IndexController {
     @GetMapping("/getQuestions")
     @ResponseBody
     public Map<String,Object> findQuestionByPage(Integer currentPage,Integer record){//当前页和每页条数
-
+        Map<String, Object> map = new HashMap<>();
         Integer totalCounts = questionMapper.findCounts();//总数据条数
         Integer totalPages = totalCounts % record == 0 ? totalCounts / record : totalCounts / record + 1;//总页数
+        if (totalCounts == null||totalCounts == 0  ) {
+            map.put("msg", "0");
+            return map;
+        }
         Integer myCurrentPage = 1;
         if (currentPage>0&&currentPage<=totalPages){
             myCurrentPage = currentPage;
@@ -55,7 +59,7 @@ public class IndexController {
         Integer end = record;
         List<QuestionDTO> questions = questionService.getQuestions(start,end,null);
 
-        Map<String, Object> map = new HashMap<>();
+
 
         map.put("totalPage", totalPages);
         map.put("currentPage", myCurrentPage);//当前页

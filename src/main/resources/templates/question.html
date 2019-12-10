@@ -7,13 +7,43 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     <link rel="stylesheet" type="text/css" href="/css/community.css">
+    <link rel="stylesheet" href="/markdown/css/editormd.css">
+    <link rel="stylesheet" href="/markdown/css/editormd.preview.css">
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
 
+    <script src="/markdown/js/editormd.js"></script>
+    <script src="/markdown/lib/marked.min.js"></script>
+    <script src="/markdown/lib/prettify.min.js"></script>
+
     <script src="/js/community.js"></script>
 
+    <script>
+        $(function(){
+        /*markdown格式回显展示*/
+            $(function() {
+                var questionView = editormd.markdownToHTML("question-view", {
+                    // markdown : "[TOC]\n### Hello world!\n## Heading 2", // Also, you can dynamic set Markdown text
+                    // htmlDecode : true,  // Enable / disable HTML tag encode.
+                    // htmlDecode : "style,script,iframe",  // Note: If enabled, you should filter some dangerous HTML tags for website security.
+                });
+            });
 
+            /*问题页标签展示*/
+            var tag = $("#showTags").val();
+            if (tag!=""){
+                var tags = tag.split(",");
+                for (var i = 0 ; i < tags.length ; i++){
+                    var t = ' <span class="label label-info" style="font-size: 100%;margin-right:3px;">\n' +
+                        '                         <span class="glyphicon glyphicon-tags" style="color:white;"></span>\n' +
+                        '                        <span>'+tags[i]+'</span>\n' +
+                        '                    </span>';
+                    $("#tagDiv").append(t);
+                }
+            }
+        });
+    </script>
 </head>
 <body>
 
@@ -40,7 +70,11 @@
 
             <!--问题-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <span style="width: 100%;font-size: 16px;" th:text="${question.description}"></span>
+
+                <div style="width: 100%;font-size: 16px;" id="question-view">
+                    <textarea style="display: none;" th:text="${question.description}"></textarea>
+                </div>
+
                 <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12"/>
 
                 <input id="showTags" type="hidden" th:value="${question.tags}">

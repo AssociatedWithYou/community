@@ -46,6 +46,14 @@
                     dataType: "json",
                     url: "/getQuestions?record=" + re + "&currentPage=" + cp,
                     success: function (data) {
+                        var msg = data.msg;
+                        if (msg==0){
+                            var app = ' <div class="jumbotron">\n' +
+                                '                        <h3 align="center">空空如也~~</h3>\n' +
+                                '                    </div> ';
+                            $("#questions").append(app);
+
+                        }
                         for (var i = 0; i < data.questions.length; i++) {
                             var title = data.questions[i].title;
                             var avatarUrl = data.questions[i].user.avatarUrl;
@@ -71,6 +79,7 @@
                             );
 
                         }
+
 
 
                         var record = data.record;
@@ -119,7 +128,7 @@
                         if (cp==1){
                             $("#page_previous").hide();
                             $("#page_first").hide();
-                        }else if(currentPage==totalPage){
+                        }if(currentPage==totalPage){
                             $("#page_next").hide();
                             $("#page_last").hide();
                         }
@@ -153,6 +162,14 @@
                 <button type="submit" class="btn btn-default">搜索</button>
             </form>
             <ul class="nav navbar-nav navbar-right">
+                <li th:if="${session.user}">
+                    <li role="presentation">
+                        <a th:href="@{/profile/reply}" th:if="${session.user}">
+                            通知
+                            <span  style="background-color: #e14242;" class="badge" th:text="${session.unReadCount}">0</span>
+                        </a>
+                    </li>
+                </li>
                 <li th:if="${session.user}">
                     <a href="/publish">提问</a>
                 </li>
