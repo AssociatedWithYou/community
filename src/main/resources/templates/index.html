@@ -10,11 +10,11 @@
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script th:src="${'/js/community.js'}"></script>
 
 
 
     <script>
-
         window.onload = function(){
             var close = window.localStorage.getItem("closable");
             if(close == "true"){
@@ -47,7 +47,7 @@
                     url: "/getQuestions?record=" + re + "&currentPage=" + cp,
                     success: function (data) {
                         var msg = data.msg;
-                        if (msg==0){
+                        if (msg==0||data.questions==null||data.questions.length==0){
                             var app = ' <div class="jumbotron">\n' +
                                 '                        <h3 align="center">空空如也~~</h3>\n' +
                                 '                    </div> ';
@@ -57,7 +57,7 @@
                         for (var i = 0; i < data.questions.length; i++) {
                             var title = data.questions[i].title;
                             var avatarUrl = data.questions[i].user.avatarUrl;
-                            var likeCount = data.questions[i].likeCount;
+                            var gmtCreate = data.questions[i].gmtCreate;
                             var viewCount = data.questions[i].viewCount;
                             var commentCount = data.questions[i].commentCount;
                             var questionid = data.questions[i].id;
@@ -71,7 +71,7 @@
                                 "                <div class='media-body'>\n" +
                                 "                    <a style='text-decoration:none;' href='/questions/"+questionid+"'><h4 class='media-heading'>" + title + "</h4>\n</a> " +
                                 "                    <span class='text-desc'>\n" +
-                                "                        • " + commentCount + " 个评论    • " + viewCount + " 次浏览    • " + likeCount + " 个点赞\n" +
+                                "                        • " + commentCount + " 个评论    • " + viewCount + " 次浏览    • " + new Date(gmtCreate).Format('yyyy-MM-dd')  +
                                 "                    </span>\n" +
                                 "                </div>\n" +
                                 "            </div>\n" +
@@ -144,7 +144,7 @@
 
 
 <!-导航栏-->
-<nav class="navbar navbar-default" th:fragment="navigation">
+<nav class="navbar navbar-default" th:fragment="navigation" style="display: list-item;">
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
@@ -155,18 +155,23 @@
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <form class="navbar-form navbar-left">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="输入搜索的话题">
-                </div>
-                <button type="submit" class="btn btn-default">搜索</button>
-            </form>
+           <div style="align-content: center;">
+               <form class="navbar-form navbar-left" th:action="@{'/goToSearch'}" method="get">
+                   <div class="form-group">
+                       <input type="hidden" name="record" class="form-control" value="5">
+                       <input type="hidden" name="currentPage" class="form-control" value="1">
+                       <input type="text" id="search_input" style="min-width: 320px;" name="search" class="form-control" placeholder="请输入您想搜索的问题、内容、标签或作者...">
+                   </div>
+                   <button type="submit" class="btn btn-default" >搜索</button>
+               </form>
+           </div>
+
             <ul class="nav navbar-nav navbar-right">
                 <li th:if="${session.user}">
                     <li role="presentation">
                         <a th:href="@{/profile/reply}" th:if="${session.user}">
                             通知
-                            <span  style="background-color: #e14242;" class="badge" th:text="${session.unReadCount}">0</span>
+                            <span th:if="${session.unReadCount}" style="background-color: #e14242;" class="badge" th:text="${session.unReadCount}">0</span>
                         </a>
                     </li>
                 </li>
@@ -194,9 +199,9 @@
                 </li>
 
                 <li th:width="58px" th:height="50px">
-                    <a>
+                    <a style="display: unset;">
                         <img class="img-rounded" th:if="${session.user}" th:src="${session.user.avatarUrl}" width="40px" height="35px">
-                        <img class="img-rounded" th:unless="${session.user}" th:src="@{img/a.png}" width="40px" height="35px">
+                        <img class="img-rounded" th:unless="${session.user}" th:src="@{/img/默认登陆头像.png}" width="40px" height="35px">
                     </a>
                 </li>
             </ul>
@@ -213,7 +218,7 @@
 
 <div class="container-fluid main">
     <div class="row">
-        <div class="col-lg-10 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-lg-10 col-md-12 col-sm-12 col-xs-12" style="border-right: solid 1px #eee;">
             <h4><span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>发现</h4>
             <hr>
 
@@ -236,7 +241,7 @@
 
         </div>
         <div class="col-lg-2 col-md-12 col-sm-12 col-xs-12">
-            <h3>热门话题</h3>
+            <h3 align="center">热门话题</h3>
         </div>
     </div>
 </div>

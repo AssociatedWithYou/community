@@ -17,7 +17,7 @@
     <script src="/markdown/lib/marked.min.js"></script>
     <script src="/markdown/lib/prettify.min.js"></script>
 
-    <script src="/js/community.js"></script>
+    <script th:src="${'/js/community.js'}"></script>
 
     <script>
         $(function(){
@@ -55,7 +55,7 @@
 
 <div class="container-fluid main">
     <div class="row">
-        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" style="padding: 25px 25px;">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" style="border-right: solid 1px #eee;padding: 25px 25px;">
             <h4>
                 <h4>
                     <span th:text="${question.title}"></span>

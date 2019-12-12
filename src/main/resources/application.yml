@@ -15,17 +15,18 @@ spring:
 
   thymeleaf:
     cache: false
+
+  #配置文件上传大小限制
   servlet:
     multipart:
       max-file-size: 2MB
       max-request-size: 20MB
 logging:
   level:
-    com.jiane.mapper.NotificationMapper: debug
-#com:
-#  jiane:
-#    advice-packge-name: com.jiane
-#    model-and-view-url: /
+    com.jiane.mapper.QuestionMapper: debug
 
-#配置文件上传大小限制
 
+
+mybatis:
+  type-aliases-package: com.jiane.model
+  mapper-locations: classpath:mapper/*Mapper.xml

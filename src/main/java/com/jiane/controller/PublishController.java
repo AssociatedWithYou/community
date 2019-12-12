@@ -57,6 +57,31 @@ public class PublishController {
     @PostMapping("/publish")
     @ResponseBody
     public String addQuestion(Question question, HttpServletRequest request, Model model){
+        if (question.getTitle()==null||question.getTitle().isEmpty()){
+            return "{\"success\": 0,\"msg\": \"标题不能为空\"}";
+        }
+        if (question.getTitle().length()>50){
+            return "{\"success\": 0,\"msg\": \"标题过长,请少于50个字符\"}";
+        }
+        if (question.getDescription()==null||question.getDescription().isEmpty()){
+            return "{\"success\": 0,\"msg\": \"问题描述不能为空\"}";
+        }
+        if (question.getTags() == null || question.getTags().isEmpty()) {
+            return "{\"success\": 0,\"msg\": \"标签不能为空\"}";
+        }
+        System.out.println(question.getTags());
+        if (question.getTags().contains("c  ")){
+            String c = question.getTags().replace("c  ", "c++");
+            question.setTags(c);
+        }
+
+        String[] split = question.getTags().split(",");
+
+        String illegalTags = Tag.getIllegalTags(split);
+        if (illegalTags!=null){
+            return "{\"success\": 0,\"msg\": \"存在非法标签:"+illegalTags+"\"}";
+        }
+
         System.out.println("-------------------------");
         System.out.println("question-publish:"+question);
         HttpSession session = request.getSession();
@@ -64,7 +89,7 @@ public class PublishController {
         Cookie[] cookies = request.getCookies();
         if(cookies==null||cookies.length==0){
             System.out.println("cookie为空");
-            return "{\"msg\":\"请先登录\"}";
+            return "{\"success\": 0,\"msg\": \"请先登陆\"}";
         }
         for (Cookie cookie : cookies) {
             if ("token".equals(cookie.getName())) {
@@ -82,7 +107,7 @@ public class PublishController {
            /* model.addAttribute("error", "请先登录");
             return "publish";*/
             System.out.println("先去登录");
-            return "{\"msg\":\"请先登录\"}";
+            return "{\"success\": 0,\"msg\": \"请先登陆\"}";
         }
 
         System.out.println("执行了发布或者更新");
@@ -90,6 +115,6 @@ public class PublishController {
 
         System.out.println("发布成功");
         model.addAttribute("tags",Tag.getTags());
-        return "{\"msg\":\"登录成功,等待跳转...\"}";
+        return "{\"success\": 1,\"msg\": \"发布成功,等待跳转...\"}";
     }
 }

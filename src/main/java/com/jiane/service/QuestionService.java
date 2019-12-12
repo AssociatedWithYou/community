@@ -31,10 +31,24 @@ public class QuestionService {
 
 
     @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
-    public List<QuestionDTO> getQuestions(Integer start, Integer end, User user) {
+    public List<QuestionDTO> getQuestions(Integer start, Integer end, User user,String search) {
+        String s = "";
         List<Question> questions = null;
         if (user == null||user.getId()==null||user.getId()<1) {
-            questions= questionMapper.findQuestionByPage(start,end);
+            if (search!=null&&!search.isEmpty()){
+                String[] sp = search.split(" ");
+                for (int i = 0; i < sp.length; i++) {
+                    if (i == sp.length-1){
+                        s += sp[i];
+                        break;
+                    }
+                    s += sp[i];
+                    s += "|";
+                }
+            }
+            System.out.println("search的样式:"+s);
+            System.out.println(start+"__"+end+"__"+s);
+            questions= questionMapper.findQuestionByPage(start,end,s);
         }else{
             questions= questionMapper.findQuestionByUser(start,end,user.getId());
         }

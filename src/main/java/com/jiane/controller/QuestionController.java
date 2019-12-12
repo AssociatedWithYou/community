@@ -22,9 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -56,8 +53,11 @@ public class QuestionController {
 
         User sesssion_user = (User) session.getAttribute("user");
 
-        if ((int) sesssion_user.getId() != (int) userById.getId()) {
-            questionService.updateViewCount();
+        if(sesssion_user!=null){
+            if ((int) sesssion_user.getId() != (int) userById.getId()) {
+                questionService.updateViewCount();
+            }
+
         }
 
         questionDto.setUser(userById);
@@ -131,6 +131,13 @@ public class QuestionController {
     @RequestMapping("/question/imgUpload")
     @ResponseBody
     public ImgUploadDTO imgUpload(HttpServletRequest request, MultipartFile multipartFile) {
+        ImgUploadDTO imgUploadDTO = new ImgUploadDTO();
+        User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {
+            imgUploadDTO.setSuccess(0);
+            imgUploadDTO.setMessage("请先登录...");
+            return imgUploadDTO;
+        }
        /* ImgUploadDTO imgUploadDTO = new ImgUploadDTO();
         String realPath = request.getServletContext().getRealPath("/questionImages") + "/";
         System.out.println("realPath:" + realPath);
@@ -156,7 +163,6 @@ public class QuestionController {
             imgUploadDTO.setMessage("文件上传失败啦!");
 
         }*/
-        ImgUploadDTO imgUploadDTO = new ImgUploadDTO();
         imgUploadDTO.setSuccess(1);
         imgUploadDTO.setMessage("文件上传成功!");
         imgUploadDTO.setUrl("http://localhost:8080/img/a.png");

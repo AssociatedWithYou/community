@@ -38,9 +38,9 @@ public class IndexController {
 
     @GetMapping("/getQuestions")
     @ResponseBody
-    public Map<String,Object> findQuestionByPage(Integer currentPage,Integer record){//当前页和每页条数
+    public Map<String,Object> findQuestionByPage(Integer currentPage,Integer record,String search){//当前页和每页条数
         Map<String, Object> map = new HashMap<>();
-        Integer totalCounts = questionMapper.findCounts();//总数据条数
+        Integer totalCounts = questionMapper.findCounts(search);//总数据条数
         Integer totalPages = totalCounts % record == 0 ? totalCounts / record : totalCounts / record + 1;//总页数
         if (totalCounts == null||totalCounts == 0  ) {
             map.put("msg", "0");
@@ -57,7 +57,7 @@ public class IndexController {
 
         Integer start = (myCurrentPage - 1) * record;
         Integer end = record;
-        List<QuestionDTO> questions = questionService.getQuestions(start,end,null);
+        List<QuestionDTO> questions = questionService.getQuestions(start,end,null,search);
 
 
 
@@ -65,8 +65,10 @@ public class IndexController {
         map.put("currentPage", myCurrentPage);//当前页
         map.put("questions", questions);//当前页的数据
         map.put("record", record);//每页条数
+        System.out.println(myCurrentPage);
         List<Integer> pages = pagingUtil.getPageList(myCurrentPage,totalPages);
         map.put("pagetoolbar", pages);
+        System.out.println(pages);
         return map;
     }
 }

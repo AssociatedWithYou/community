@@ -39,6 +39,36 @@ public class Tag {
         return tagsDTOS;
     }
 
+    public static String getIllegalTags(String[] strings){
+        String s = "";
+
+        List<TagsDTO> tags = getTags();
+
+
+        for (String string : strings) {
+            int i = 0;
+            for (TagsDTO tag : tags) {
+                boolean contains = tag.getTags().contains(string);
+                if (!contains){
+                    i += 1;
+                }
+            }
+            if (i==tags.size()){
+                s += string + ",";
+            }
+        }
+
+        if (s != "") {
+            int i = s.lastIndexOf(",");
+            System.out.println(s);
+            String substring = s.substring(0,i);
+            System.out.println(substring);
+            return substring;
+        }else{
+            return null;
+        }
+    }
+
 }
 
 

@@ -34,6 +34,7 @@ public class SessionInterceptor implements HandlerInterceptor {
         }
         Cookie[] cookies = request.getCookies();
         if (cookies==null||cookies.length==0){
+            System.out.println("1");
             return true;
         }else {
             for (Cookie cookie : cookies) {

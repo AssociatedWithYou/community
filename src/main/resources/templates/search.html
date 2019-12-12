@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>简e社区</title>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/community.css">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script th:src="${'/js/community.js'}"></script>
+
+
+
+    <script>
+        window.onload = function(){
+            var close = window.localStorage.getItem("closable");
+            if(close == "true"){
+                window.close();
+                localStorage.removeItem("closable");
+            }
+        }
+
+
+        $(function(){
+            var search = $("#search").val().toString();
+            $("#search_input").val(search);
+            page(1,5,search);
+
+            $("#li_dropdown").hover(function(){
+                $("#li_dropdown").attr("class", "dropdown open");
+            },function(){
+                $("#li_dropdown").attr("class", "dropdown");
+            });
+        });
+
+        function page(cp,re,search) {
+
+            $("#questions").empty();
+            $("#div_pages").empty();
+
+
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: "/getQuestions?record=" + re + "&currentPage=" + cp+"&search="+search,
+                success: function (data) {
+                    var msg = data.msg;
+                    if (msg==0||data.questions==null||data.questions.length==0){
+                        var app = ' <div class="jumbotron">\n' +
+                            '                        <h3 align="center">空空如也~~</h3>\n' +
+                            '                    </div> ';
+                        $("#questions").append(app);
+
+                    }
+                    for (var i = 0; i < data.questions.length; i++) {
+                        var title = data.questions[i].title;
+                        var avatarUrl = data.questions[i].user.avatarUrl;
+                        var gmtCreate = data.questions[i].gmtCreate;
+                        var viewCount = data.questions[i].viewCount;
+                        var commentCount = data.questions[i].commentCount;
+                        var questionid = data.questions[i].id;
+                        $("#questions").append(
+                            " <div class='media'>\n" +
+                            "                <div class='media-left'>\n" +
+                            "                    <a style='text-decoration:none;' href='/questions/"+questionid+"'>\n" +
+                            "                        <img  class='question-img media-object img-rounded' src='" + avatarUrl + "'>\n" +
+                            "                    </a>\n" +
+                            "                </div>\n" +
+                            "                <div class='media-body'>\n" +
+                            "                    <a style='text-decoration:none;' href='/questions/"+questionid+"'><h4 class='media-heading'>" + title + "</h4>\n</a> " +
+                            "                    <span class='text-desc'>\n" +
+                            "                        • " + commentCount + " 个评论    • " + viewCount + " 次浏览    • " + new Date(gmtCreate).Format('yyyy-MM-dd')  +
+                            "                    </span>\n" +
+                            "                </div>\n" +
+                            "            </div>\n" +
+                            "            <hr/>"
+                        );
+
+                    }
+
+
+
+                    var record = data.record;
+                    var currentPage = data.currentPage;
+                    var totalPage = data.totalPage;
+                    var pagetoolbar = " <nav id=\"nav_navigation\" aria-label=\"Page navigation\" style=\"text-align: center;\">\n" +
+                        "                                <ul id=\"ul_page\" class=\"pagination\">"+
+                        "                                   <li id=\"page_first\">\n" +
+                        "                                        <a style='text-decoration:none;'  href=\"javascript:page(" + 1 + "," + record +",'"+search+"')\" aria-label=\"Previous\">\n" +
+                        "                                            <span aria-hidden=\"true\" class='glyphicon glyphicon-chevron-left'></span>\n" +
+                        "                                        </a>\n" +
+                        "                                      </li>\n " +
+                        "                                    <li id=\"page_previous\">\n" +
+                        "                                        <a style='text-decoration:none;'  href=\"javascript:page(" + (currentPage - 1) + "," + record +",'"+search+"')\" aria-label=\"Previous\">\n" +
+                        "                                            <span aria-hidden=\"true\" class='glyphicon glyphicon-menu-left'></span>\n" +
+                        "                                        </a>\n" +
+                        "                                    </li>\n";
+
+
+                    for (var j = 0; j < data.pagetoolbar.length; j++) {
+                        var myrecord = data.record;
+                        var mypagetoolbar = data.pagetoolbar[j];
+
+                        if(mypagetoolbar==data.currentPage){
+                            pagetoolbar += " <li  id=\"page_"+(j+1)+"\"><a  style='text-decoration:none;background-color:#5bc0de;'  href=\"javascript:page(" + mypagetoolbar+ "," + myrecord +",'"+search+"')\">" + mypagetoolbar + "</a></li>"
+                        }else{
+                            pagetoolbar += " <li  id=\"page_"+(j+1)+"\"><a style='text-decoration:none;' href=\"javascript:page(" + mypagetoolbar+ "," + myrecord +",'"+search+"')\">" + mypagetoolbar + "</a></li>"
+                        }
+
+                    }
+                    pagetoolbar += "                        <li id=\"page_next\">\n" +
+                        "                                        <a style='text-decoration:none;' href=\"javascript:page(" + (currentPage + 1) + "," + record +",'"+search+"')\" aria-label=\"Next\">\n" +
+                        "                                            <span aria-hidden=\"true\" class='glyphicon glyphicon-menu-right'></span>\n" +
+                        "                                        </a>\n" +
+                        "                                    </li> "+
+                        "                                <li id=\"page_last\">\n "+
+                        "                                        <a style='text-decoration:none;' href=\"javascript:page(" + totalPage + "," + record +",'"+search+"')\" aria-label=\"Next\">\n" +
+                        "                                            <span aria-hidden=\"true\" class='glyphicon glyphicon-chevron-right'></span>\n" +
+                        "                                        </a>\n" +
+                        "                                    </li>\n" +
+                        "                                </ul>\n" +
+                        "                            </nav>";
+
+                    $("#div_pages").append(pagetoolbar);
+
+                    if (cp==1){
+                        $("#page_previous").hide();
+                        $("#page_first").hide();
+                    }if(currentPage==totalPage){
+                        $("#page_next").hide();
+                        $("#page_last").hide();
+                    }
+                }
+            });
+
+        }
+
+    </script>
+
+</head>
+<body>
+
+
+<!-导航栏-->
+<!--导航栏-->
+<div th:replace="index::navigation">
+
+</div>
+
+
+<div>
+    <input type="hidden" id="currentPage" th:value="${currentPage}">
+    <input type="hidden" id="record" th:value="${record}">
+    <input type="hidden" id="search" th:value="${search}">
+</div>
+
+
+
+
+<div class="container-fluid main">
+    <div class="row">
+        <div class="col-lg-10 col-md-12 col-sm-12 col-xs-12" style="border-right: solid 1px #eee;">
+            <h4><span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>搜索</h4>
+            <hr>
+
+            <!--问题-->
+            <div id="questions">
+            </div>
+
+
+            <!--分页栏-->
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div id="div_pages" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </div>
+        <div class="col-lg-2 col-md-12 col-sm-12 col-xs-12">
+            <h3 align="center">热门话题</h3>
+            <h3 align="center">搜索测试页面</h3>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

@@ -139,7 +139,7 @@ public class ProfileController {
 
         Integer start = (myCurrentPage - 1) * record;
         Integer end = record;
-        List<QuestionDTO> questions = questionService.getQuestions(start,end,user);
+        List<QuestionDTO> questions = questionService.getQuestions(start,end,user,null);
 
 
 
