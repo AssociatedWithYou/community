@@ -4,28 +4,27 @@ github:
     id: 89cceb7e8f19ce08fdea
     secret: da8194efe08636b7adb017780b6fe7aee042b0ba
   redirect:
-    uri: http://localhost:8080/callback
+    uri: http://121.41.17.80:8080/callback
 
 spring:
   datasource:
-    url: jdbc:h2:~/community
+    url: jdbc:mysql:121.41.17.80:3306/community
     username: root
-    password: h2
-    driver-class-name: org.h2.Driver
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
-  thymeleaf:
-    cache: false
+#  thymeleaf:
+#    cache: false
 
   #配置文件上传大小限制
   servlet:
     multipart:
-      max-file-size: 2MB
-      max-request-size: 20MB
+      max-file-size: 10MB
+      max-request-size: 50MB
 logging:
   level:
-    com.jiane.mapper.QuestionMapper: debug
     root: info
-    com.jiane.mapper: debug
+    com.jiane.mapper: warn
   file:
     max-size: 50MB
     max-history: 30
@@ -35,3 +34,5 @@ logging:
 mybatis:
   type-aliases-package: com.jiane.model
   mapper-locations: classpath:mapper/*Mapper.xml
+server:
+  port: 80

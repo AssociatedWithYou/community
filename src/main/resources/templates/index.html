@@ -179,7 +179,7 @@
                     <a href="/publish">提问</a>
                 </li>
                 <li th:unless="${session.user}">
-                    <a href="https://github.com/login/oauth/authorize?client_id=89cceb7e8f19ce08fdea&redirect_uri=http://localhost:8080/callback&scope=user&state=1">登陆</a>
+                    <a href="https://github.com/login/oauth/authorize?client_id=89cceb7e8f19ce08fdea&redirect_uri=http://121.41.17.80:8080/callback&scope=user&state=1">登陆</a>
                 </li>
 
                 <li id="li_dropdown" class="dropdown" th:if="${session.user}">
@@ -193,6 +193,8 @@
                     <ul class="dropdown-menu"  aria-labelledby="dropdownMenu1">
                         <li><a href="/profile/questions">问题中心</a></li>
                         <li><a href="#">个人资料</a></li>
+                        <li><a href="#">个资懒得写了</a></li>
+                        <li><a href="#">以后有空再说</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="/loginOut">退出登陆</a></li>
                     </ul>
@@ -242,6 +244,8 @@
         </div>
         <div class="col-lg-2 col-md-12 col-sm-12 col-xs-12">
             <h3 align="center">热门话题</h3>
+            <br/>
+            <p align="center">后面有时间在开发热门话题...</p>
         </div>
     </div>
 </div>

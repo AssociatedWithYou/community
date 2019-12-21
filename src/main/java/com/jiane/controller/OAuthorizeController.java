@@ -6,6 +6,7 @@ import com.jiane.mapper.UserMapper;
 import com.jiane.model.User;
 import com.jiane.provice.GithubProvider;
 import com.jiane.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -16,9 +17,12 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 @Controller
+@Slf4j
 public class OAuthorizeController {
 
     @Autowired
@@ -61,7 +65,11 @@ public class OAuthorizeController {
         }else{
 //            登陆成功
 
+            Date date = new Date();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-DD hh:mm:ss");
+            String format = simpleDateFormat.format(date);
 
+            log.info("id为"+githubUser.getId()+"的用户于"+format+"成功登陆本社区");
             User user = new User();
 
             user.setName(githubUser.getName())

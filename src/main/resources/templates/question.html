@@ -113,10 +113,10 @@
                             <span th:text="${comment.content}"></span>
 
                             <br/>
-                            <button style="outline: none;" class="btn btn-default comment_btn comment_btn_color">
+                           <!-- <button style="outline: none;" class="btn btn-default comment_btn comment_btn_color">
                                 <span class="glyphicon glyphicon-thumbs-up comment_span"></span>
                             </button>
-
+-->
                             <button style="outline: none;" class="btn btn-default comment_btn comment_open">
                                 <span class="glyphicon glyphicon-comment comment_span"></span>
                                 <span th:text="${comment.commentCount}"></span>
@@ -181,9 +181,10 @@
                         <h4 class="media-heading">
                             <a style="text-decoration: none;" href="#" th:text="${question.user.name}"></a>
                         </h4>
-                        <span style="font-size: 13px;color:#999" th:text="23个回复"></span> |
-                        <span style="font-size: 13px;color:#999" th:text="5518次浏览"></span>
-
+                       <!-- <span style="font-size: 13px;color:#999" th:text="23个回复"></span> |
+                        <span style="font-size: 13px;color:#999" th:text="5518次浏览"></span>-->
+                        <spane style="font-size: 13px;color:#999">创建时间：</spane>
+                        <span style="font-size: 13px;color:#999" th:text="${#dates.format(question.user.gmtCreate,'yyyy-MM-dd')}"></span>
                     </div>
                 </div>
             </div>

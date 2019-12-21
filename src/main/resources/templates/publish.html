@@ -164,7 +164,7 @@
                         <!-- Tab panes -->
                         <div class="tab-content" style="margin-top: 6px;">
                             <div th:each="tag:${tags}" role="tabpanel" class="tab-pane" th:classappend="${tag.tagCategoryName == '开发语言'} ? 'active' : '' " th:id="${tag.tagCategoryName}">
-                                <a href="#"  th:each="t:${tag.tags}" onclick="javascript:getQuestionTags(this);" th:data-tag="${t}"  style="text-decoration: none;margin-right: 4px;padding-top: 12px;display: inline-block;">
+                                <a href="javascript:;"  th:each="t:${tag.tags}" onclick="getQuestionTags(this);" th:data-tag="${t}"  style="text-decoration: none;margin-right: 4px;padding-top: 12px;display: inline-block;">
                                     <span class="label label-info">
                                             <span class="glyphicon glyphicon-tag"></span>
                                             <span th:text="${t}"></span>
