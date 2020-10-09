@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>简e社区</title>
 
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="/css/community.css">
+    <link rel="stylesheet" th:href="${'/css/bootstrap.min.css'}">
+    <link rel="stylesheet" th:href="${'/css/bootstrap-theme.min.css'}">
+    <link rel="stylesheet" th:href="${'/css/community.css'}">
 
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <!--<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>-->
+    <script th:src="${'/js/jquery-3.5.1.min.js'}"></script>
+    <script th:src="${'/js/bootstrap.min.js'}"></script>
     <script th:src="${'/js/community.js'}"></script>
 
 
@@ -55,33 +56,34 @@
                         $("#questions").append(app);
 
                     }
-                    for (var i = 0; i < data.questions.length; i++) {
-                        var title = data.questions[i].title;
-                        var avatarUrl = data.questions[i].user.avatarUrl;
-                        var gmtCreate = data.questions[i].gmtCreate;
-                        var viewCount = data.questions[i].viewCount;
-                        var commentCount = data.questions[i].commentCount;
-                        var questionid = data.questions[i].id;
-                        $("#questions").append(
-                            " <div class='media'>\n" +
-                            "                <div class='media-left'>\n" +
-                            "                    <a style='text-decoration:none;' href='/questions/"+questionid+"'>\n" +
-                            "                        <img  class='question-img media-object img-rounded' src='" + avatarUrl + "'>\n" +
-                            "                    </a>\n" +
-                            "                </div>\n" +
-                            "                <div class='media-body'>\n" +
-                            "                    <a style='text-decoration:none;' href='/questions/"+questionid+"'><h4 class='media-heading'>" + title + "</h4>\n</a> " +
-                            "                    <span class='text-desc'>\n" +
-                            "                        • " + commentCount + " 个评论    • " + viewCount + " 次浏览    • " + new Date(gmtCreate).Format('yyyy-MM-dd')  +
-                            "                    </span>\n" +
-                            "                </div>\n" +
-                            "            </div>\n" +
-                            "            <hr/>"
-                        );
+                    if (data.questions != undefined&&data.questions!=null){
+                        for (var i = 0; i < data.questions.length; i++) {
+                            var title = data.questions[i].title;
+                            var avatarUrl = data.questions[i].user.avatarUrl;
+                            var gmtCreate = data.questions[i].gmtCreate;
+                            var viewCount = data.questions[i].viewCount;
+                            var commentCount = data.questions[i].commentCount;
+                            var questionid = data.questions[i].id;
+                            $("#questions").append(
+                                " <div class='media'>\n" +
+                                "                <div class='media-left'>\n" +
+                                "                    <a style='text-decoration:none;' href='/questions/"+questionid+"'>\n" +
+                                "                        <img  class='question-img media-object img-rounded' src='" + avatarUrl + "'>\n" +
+                                "                    </a>\n" +
+                                "                </div>\n" +
+                                "                <div class='media-body'>\n" +
+                                "                    <a style='text-decoration:none;' href='/questions/"+questionid+"'><h4 class='media-heading'>" + title + "</h4>\n</a> " +
+                                "                    <span class='text-desc'>\n" +
+                                "                        • " + commentCount + " 个评论    • " + viewCount + " 次浏览    • " + new Date(gmtCreate).Format('yyyy-MM-dd')  +
+                                "                    </span>\n" +
+                                "                </div>\n" +
+                                "            </div>\n" +
+                                "            <hr/>"
+                            );
+
+                        }
 
                     }
-
-
 
                     var record = data.record;
                     var currentPage = data.currentPage;
@@ -100,14 +102,17 @@
                         "                                    </li>\n";
 
 
-                    for (var j = 0; j < data.pagetoolbar.length; j++) {
-                        var myrecord = data.record;
-                        var mypagetoolbar = data.pagetoolbar[j];
+                    if (data.pagetoolbar!=undefined &&data.pagetoolbar!=null){
+                        for (var j = 0; j < data.pagetoolbar.length; j++) {
+                            var myrecord = data.record;
+                            var mypagetoolbar = data.pagetoolbar[j];
 
-                        if(mypagetoolbar==data.currentPage){
-                            pagetoolbar += " <li  id=\"page_"+(j+1)+"\"><a  style='text-decoration:none;background-color:#5bc0de;'  href=\"javascript:page(" + mypagetoolbar+ "," + myrecord +",'"+search+"')\">" + mypagetoolbar + "</a></li>"
-                        }else{
-                            pagetoolbar += " <li  id=\"page_"+(j+1)+"\"><a style='text-decoration:none;' href=\"javascript:page(" + mypagetoolbar+ "," + myrecord +",'"+search+"')\">" + mypagetoolbar + "</a></li>"
+                            if(mypagetoolbar==data.currentPage){
+                                pagetoolbar += " <li  id=\"page_"+(j+1)+"\"><a  style='text-decoration:none;background-color:#5bc0de;'  href=\"javascript:page(" + mypagetoolbar+ "," + myrecord +",'"+search+"')\">" + mypagetoolbar + "</a></li>"
+                            }else{
+                                pagetoolbar += " <li  id=\"page_"+(j+1)+"\"><a style='text-decoration:none;' href=\"javascript:page(" + mypagetoolbar+ "," + myrecord +",'"+search+"')\">" + mypagetoolbar + "</a></li>"
+                            }
+
                         }
 
                     }

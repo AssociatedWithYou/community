@@ -17,17 +17,23 @@ public class UserService {
     UserMapper userMapper;
 
     public User addOrUpdateUser(User myUser){
-        User user = new User();
+
         User userByAcountId = userMapper.findUserByAcount(myUser);
-        if (userByAcountId.getId()==null) {
+        if (userByAcountId==null||userByAcountId.getId()==null) {
             Long sysTime = System.currentTimeMillis();
             String token = UUID.randomUUID().toString();
-            user.setToken(token)
+            myUser.setToken(token)
                 .setGmtCreate(sysTime)
                 .setGmtModified(sysTime);
 
+            if (myUser.getName()==null||myUser.getName().isEmpty()){
+                String name = "用户"+UUID.randomUUID().toString().replace("-","").substring(0,6);
+                myUser.setName(name);
+            }
+
 
             userMapper.insert(myUser);
+            myUser.setToken(token).setGmtCreate(sysTime).setGmtModified(sysTime);
             return myUser;
         }
         return userByAcountId;

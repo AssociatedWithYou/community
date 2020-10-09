@@ -22,6 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -138,14 +141,14 @@ public class QuestionController {
             imgUploadDTO.setMessage("请先登录...");
             return imgUploadDTO;
         }
-       /* ImgUploadDTO imgUploadDTO = new ImgUploadDTO();
         String realPath = request.getServletContext().getRealPath("/questionImages") + "/";
         System.out.println("realPath:" + realPath);
         File file = new File(realPath);
         if (!file.exists()) {
             file.mkdir();
         }
-        String suffix = multipartFile.getContentType().split(".")[1];//文件后缀
+        //文件后缀
+        String suffix = multipartFile.getContentType().split(".")[1];
 
         String oldFileName = multipartFile.getOriginalFilename();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMDDhhmmss");
@@ -161,11 +164,10 @@ public class QuestionController {
         } catch (Exception e) {
             imgUploadDTO.setSuccess(0);
             imgUploadDTO.setMessage("文件上传失败啦!");
-
-        }*/
-        imgUploadDTO.setSuccess(1);
+        }
+       /* imgUploadDTO.setSuccess(1);
         imgUploadDTO.setMessage("文件上传成功!");
-        imgUploadDTO.setUrl("http://localhost:8080/img/a.png");
+        imgUploadDTO.setUrl("http://localhost:8080/img/a.png");*/
         return imgUploadDTO;
     }
 

@@ -81,6 +81,7 @@ public class OAuthorizeController {
             Cookie cookie = new Cookie("token", user1.getToken());
             cookie.setMaxAge(60*60*24);
             response.addCookie(cookie);
+            session.setAttribute("user", user1);
             return "redirect:/";
         }
     }
@@ -92,9 +93,14 @@ public class OAuthorizeController {
         request.getSession().removeAttribute("user");
 
         //移出Cookie
-        Cookie cookie = new Cookie("token", null);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
+        Cookie token = new Cookie("token", null);
+        token.setMaxAge(0);
+
+        Cookie session = new Cookie("JSESSIONID", null);
+        session.setMaxAge(0);
+
+        response.addCookie(token);
+        response.addCookie(session);
         return "redirect:/";
     }
 }

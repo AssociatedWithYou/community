@@ -17,7 +17,7 @@ spring:
 logging:
   level:
     com.jiane.mapper.QuestionMapper: debug
-    root: info
+    root: debug
     com.jiane.mapper: debug
   file:
     max-size: 50MB
@@ -33,6 +33,7 @@ github:
     id: 89cceb7e8f19ce08fdea
     secret: da8194efe08636b7adb017780b6fe7aee042b0ba
   redirect:
+#    uri: http://localhost:8080/callback
     uri: http://localhost:8080/callback
 
 mybatis:
