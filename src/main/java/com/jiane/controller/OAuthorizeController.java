@@ -45,6 +45,7 @@ public class OAuthorizeController {
     @GetMapping("/callback")
     public String callback(@RequestParam("code") String code,
                            @RequestParam("state") String state,
+                           HttpServletRequest request,
                            HttpSession session,
                            HttpServletResponse response) {
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
@@ -79,8 +80,20 @@ public class OAuthorizeController {
             User user1 = userService.addOrUpdateUser(user);
 
             Cookie cookie = new Cookie("token", user1.getToken());
-            cookie.setMaxAge(60*60*24);
+            cookie.setMaxAge(60*10);
             response.addCookie(cookie);
+            Cookie[] cookies = request.getCookies();
+            String id = null;
+            for (Cookie cookie1 : cookies) {
+                cookie1.getName().equals("JSESSIONID");
+            }
+            Cookie sid = null;
+            if (id!=null){
+                sid = new Cookie("JSESSIONID",id);
+                sid.setMaxAge(60*10);
+                sid.setPath("/");
+                response.addCookie(sid);
+            }
             session.setAttribute("user", user1);
             return "redirect:/";
         }

@@ -7,7 +7,7 @@
     <select id="findQuestionByPage"  resultType="Question">
         select q.id,q.title,q.description,q.creator,q.gmt_create gmtCreate ,q.gmt_modified gmtModified,
         q.comment_count commentCount,q.view_count viewCount,q.like_count likeCount,q.tags,u.id,u.name
-        from question q left join  user u where q.CREATOR = u.id
+        from question q join  user u where q.CREATOR = u.id
         <if test="search != null &amp;&amp; search != '' ">
             and (q.title REGEXP #{search} or q.description REGEXP #{search} or u.name REGEXP #{search})
         </if>
@@ -16,7 +16,7 @@
 
     <select id="findCounts"  resultType="int">
         select count(q.id)
-        from question q left join  user u where q.CREATOR = u.id
+        from question q join  user u where q.CREATOR = u.id
         <if test="search != null &amp;&amp; search != '' ">
             and (q.title REGEXP #{search} or q.description REGEXP #{search} or u.name REGEXP #{search})
         </if>

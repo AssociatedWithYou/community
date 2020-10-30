@@ -1,41 +1,44 @@
-
 spring:
-  datasource:
-    url: jdbc:h2:~/community
-    username: root
-    password: h2
-    driver-class-name: org.h2.Driver
-
-  thymeleaf:
-    cache: false
-
-  #配置文件上传大小限制
-  servlet:
-    multipart:
-      max-file-size: 10MB
-      max-request-size: 50MB
-logging:
-  level:
-    com.jiane.mapper.QuestionMapper: debug
-    root: debug
-    com.jiane.mapper: debug
-  file:
-    max-size: 50MB
-    max-history: 30
-    #配置每个日志文件最大的大小和历史日志存放时间
-  path: logs/
-
-
-
-#github账号登陆配置
-github:
-  client:
-    id: 89cceb7e8f19ce08fdea
-    secret: da8194efe08636b7adb017780b6fe7aee042b0ba
-  redirect:
+  profiles:
+    active: pro
+#
+#spring:
+#  datasource:
+#    url: jdbc:h2:~/community
+#    username: root
+#    password: h2
+#    driver-class-name: org.h2.Driver
+#
+#  thymeleaf:
+#    cache: false
+#
+#  #配置文件上传大小限制
+#  servlet:
+#    multipart:
+#      max-file-size: 10MB
+#      max-request-size: 50MB
+#logging:
+#  level:
+#    com.jiane.mapper.QuestionMapper: debug
+#    root: debug
+#    com.jiane.mapper: debug
+#  file:
+#    max-size: 50MB
+#    max-history: 30
+#    #配置每个日志文件最大的大小和历史日志存放时间
+#  path: logs/
+#
+#
+#
+##github账号登陆配置
+#github:
+#  client:
+#    id: 89cceb7e8f19ce08fdea
+#    secret: da8194efe08636b7adb017780b6fe7aee042b0ba
+#  redirect:
+##    uri: http://localhost:8080/callback
 #    uri: http://localhost:8080/callback
-    uri: http://localhost:8080/callback
-
-mybatis:
-  type-aliases-package: com.jiane.model
-  mapper-locations: classpath:mapper/*Mapper.xml
+#
+#mybatis:
+#  type-aliases-package: com.jiane.model
+#  mapper-locations: classpath:mapper/*Mapper.xml

@@ -14,12 +14,12 @@ public interface UserMapper {
     public void insert(User user);
 
 
-    @Select("select id , name , account_id accountId , token , gmt_create gmtCreate , gmt_modified gmtModified ,avatar_url avatarUrl from user where token = #{token}")
+    @Select("select id , name , account_id accountId , token , gmt_create gmtCreate , gmt_modified gmtModified ,avatar_url avatarUrl from `USER` where token = #{token}")
     User findByToken(String token);
 
-    @Select("select id , name , account_id accountId , token , gmt_create gmtCreate , gmt_modified gmtModified ,avatar_url avatarUrl from user where id = #{creator}")
+    @Select("select id , name , account_id accountId , token , gmt_create gmtCreate , gmt_modified gmtModified ,avatar_url avatarUrl from `USER` where id = #{creator}")
     User findUserById(@Param("creator") Integer creator);
 
-    @Select("select id , name , account_id accountId , token , gmt_create gmtCreate , gmt_modified gmtModified ,avatar_url avatarUrl from user where account_id = #{accountId}")
+    @Select("select id , name , account_id accountId , token , gmt_create gmtCreate , gmt_modified gmtModified ,avatar_url avatarUrl from `USER` where account_id = #{accountId}")
     User findUserByAcount(User user);
 }

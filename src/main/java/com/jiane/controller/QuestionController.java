@@ -1,5 +1,7 @@
 package com.jiane.controller;
 
+import com.github.tobato.fastdfs.domain.fdfs.StorePath;
+import com.github.tobato.fastdfs.service.FastFileStorageClient;
 import com.jiane.dto.CommentListDTO;
 import com.jiane.dto.ImgUploadDTO;
 import com.jiane.dto.QuestionDTO;
@@ -11,18 +13,21 @@ import com.jiane.model.User;
 import com.jiane.service.CommentService;
 import com.jiane.service.QuestionService;
 import com.jiane.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.util.ResourceUtils;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
@@ -46,6 +51,12 @@ public class QuestionController {
 
     @Autowired
     NotificationMapper notificationMapper;
+
+    @Autowired
+    private FastFileStorageClient fastFileStorageClient;
+
+    private static final Logger log = LoggerFactory.getLogger(QuestionController.class);
+    private  final static String IMG_PATH_PREFIX = "static/question/upload/imgs/";
 
     @GetMapping("/questions/{id}")
     public String gotoQuestion(@PathVariable("id") Integer id, Model model, HttpSession session) {
@@ -121,7 +132,7 @@ public class QuestionController {
         }
         String s = new StringBuffer().toString();
         System.out.println("final_sb:" + sb);
-        List<Question> questions = questionService.findRelatedQuestionByTags(questionDto.getId(), s);
+        List<Question> questions = questionService.findRelatedQuestionByTags(questionDto.getId(),sb.toString());
 
         model.addAttribute("questionsByTags", questions);
         model.addAttribute("comments", commentListDTOS);
@@ -133,7 +144,7 @@ public class QuestionController {
     /*问题发布时的文件上传*/
     @RequestMapping("/question/imgUpload")
     @ResponseBody
-    public ImgUploadDTO imgUpload(HttpServletRequest request, MultipartFile multipartFile) {
+    public ImgUploadDTO imgUpload(HttpServletRequest request,  @RequestParam("editormd-image-file") MultipartFile multipartFiles) throws FileNotFoundException {
         ImgUploadDTO imgUploadDTO = new ImgUploadDTO();
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
@@ -141,33 +152,26 @@ public class QuestionController {
             imgUploadDTO.setMessage("请先登录...");
             return imgUploadDTO;
         }
-        String realPath = request.getServletContext().getRealPath("/questionImages") + "/";
-        System.out.println("realPath:" + realPath);
-        File file = new File(realPath);
-        if (!file.exists()) {
-            file.mkdir();
-        }
-        //文件后缀
-        String suffix = multipartFile.getContentType().split(".")[1];
-
-        String oldFileName = multipartFile.getOriginalFilename();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMDDhhmmss");
-        String yyyyMMDDhhmmss = simpleDateFormat.format(new Date());
-        String newFileName = realPath + yyyyMMDDhhmmss + "_" + oldFileName+suffix;
-
-        File imgFile = new File(newFileName);
+//        String name = multipartFiles.getName();
+        String name = multipartFiles.getOriginalFilename();
+        System.out.println(name);
+        int i = name.lastIndexOf(".");
+        String sufName = name.substring(i+1, name.length());
+        System.out.println(sufName);
         try {
-            multipartFile.transferTo(imgFile);
+            StorePath storePath = fastFileStorageClient.uploadFile(multipartFiles.getInputStream(),multipartFiles.getSize(),sufName,null);
+            String fullPath = storePath.getFullPath();
+//            String contentType = multipartFiles.getContentType();
+//            String suffix = contentType.split("/")[1];
+
             imgUploadDTO.setSuccess(1);
             imgUploadDTO.setMessage("文件上传成功!");
-            imgUploadDTO.setUrl("http://localhost:8080/questionImages/"+yyyyMMDDhhmmss + "_" + oldFileName+suffix);
-        } catch (Exception e) {
+            imgUploadDTO.setUrl("http://121.41.17.80:9001/"+fullPath);
+        } catch (IOException e) {
+            e.printStackTrace();
             imgUploadDTO.setSuccess(0);
             imgUploadDTO.setMessage("文件上传失败啦!");
         }
-       /* imgUploadDTO.setSuccess(1);
-        imgUploadDTO.setMessage("文件上传成功!");
-        imgUploadDTO.setUrl("http://localhost:8080/img/a.png");*/
         return imgUploadDTO;
     }
 

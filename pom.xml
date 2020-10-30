@@ -8,9 +8,10 @@
         <version>2.0.6.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+    <packaging>jar</packaging>
     <groupId>com.jiane.community</groupId>
     <artifactId>community</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>V1.2</version>
     <name>community</name>
     <description>community</description>
 
@@ -34,6 +35,13 @@
 
     <dependencies>
 
+        <!-- https://mvnrepository.com/artifact/com.github.tobato/fastdfs-client -->
+        <dependency>
+            <groupId>com.github.tobato</groupId>
+            <artifactId>fastdfs-client</artifactId>
+            <version>1.27.2</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -44,6 +52,11 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.13</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.1.18</version>
         </dependency>
 
 
@@ -57,13 +70,13 @@
 
         <!--h2数据库-->
         <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
-        <dependency>
+      <!--  <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>1.4.196</version>
         </dependency>
 
-
+-->
 
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf -->
         <dependency>
@@ -135,16 +148,16 @@
 
 
 
-            <!--flyway的插件-->
+         <!--   &lt;!&ndash;flyway的插件&ndash;&gt;
             <plugin>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>5.2.4</version>
-                <!--<configuration>
+                &lt;!&ndash;<configuration>
                     <url>jdbc:h2:~/community</url>
                     <user>root</user>
                     <password>h2</password>
-                </configuration>-->
+                </configuration>&ndash;&gt;
                 <configuration>
                     <url>${db.url}</url>
                     <user>${db.user}</user>
@@ -162,7 +175,7 @@
                         <version>8.0.13</version>
                     </dependency>
                 </dependencies>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
 
